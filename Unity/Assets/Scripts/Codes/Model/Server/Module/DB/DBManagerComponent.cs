@@ -6,6 +6,6 @@
         [StaticField]
         public static DBManagerComponent Instance;
         
-        public DBComponent[] DBComponents = new DBComponent[IdGenerater.MaxZone];
+        public DBComponent[] DBComponents = new DBComponent[IDGenerator.MaxZone];
     }
 }

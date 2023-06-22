@@ -32,8 +32,8 @@ namespace ET.Server
                 {
                     continue;
                 }
-                Process process = WatcherHelper.StartProcess(startProcessConfig.Id, createScenes);
-                self.Processes.Add(startProcessConfig.Id, process);
+                Process process = WatcherHelper.StartProcess(startProcessConfig.ID, createScenes);
+                self.Processes.Add(startProcessConfig.ID, process);
             }
         }
     }

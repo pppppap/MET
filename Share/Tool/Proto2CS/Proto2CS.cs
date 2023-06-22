@@ -24,9 +24,9 @@ namespace ET
     public static class InnerProto2CS
     {
         private const string protoDir = "../Unity/Assets/Config/Proto";
-        private const string clientMessagePath = "../Unity/Assets/Scripts/Codes/Model/Generate/Client/Message/";
-        private const string serverMessagePath = "../Unity/Assets/Scripts/Codes/Model/Generate/Server/Message/";
-        private const string clientServerMessagePath = "../Unity/Assets/Scripts/Codes/Model/Generate/ClientServer/Message/";
+        // private const string clientMessagePath = "../Unity/Assets/Scripts/Codes/Model/Generate/Client/Message/";
+        // private const string serverMessagePath = "../Unity/Assets/Scripts/Codes/Model/Generate/Server/Message/";
+        private const string clientServerMessagePath = "../Unity/Assets/Scripts/Codes/Model/Message/";
         private static readonly char[] splitChars = { ' ', '\t' };
         private static readonly List<OpcodeInfo> msgOpcode = new List<OpcodeInfo>();
 
@@ -34,16 +34,6 @@ namespace ET
         {
             msgOpcode.Clear();
 
-            if (Directory.Exists(clientMessagePath))
-            {
-                Directory.Delete(clientMessagePath, true);
-            }
-
-            if (Directory.Exists(serverMessagePath))
-            {
-                Directory.Delete(serverMessagePath, true);
-            }
-            
             if (Directory.Exists(clientServerMessagePath))
             {
                 Directory.Delete(clientServerMessagePath, true);
@@ -189,14 +179,11 @@ namespace ET
 
             if (cs.Contains("C"))
             {
-                GenerateCS(sb, clientMessagePath, proto);
-                GenerateCS(sb, serverMessagePath, proto);
                 GenerateCS(sb, clientServerMessagePath, proto);
             }
             
             if (cs.Contains("S"))
             {
-                GenerateCS(sb, serverMessagePath, proto);
                 GenerateCS(sb, clientServerMessagePath, proto);
             }
         }

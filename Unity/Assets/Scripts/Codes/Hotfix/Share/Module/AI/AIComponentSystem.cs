@@ -71,7 +71,7 @@ namespace ET
                     continue;
                 }
 
-                if (self.Current == aiConfig.Id)
+                if (self.Current == aiConfig.ID)
                 {
                     break;
                 }
@@ -79,7 +79,7 @@ namespace ET
                 self.Cancel(); // 取消之前的行为
                 ETCancellationToken cancellationToken = new ETCancellationToken();
                 self.CancellationToken = cancellationToken;
-                self.Current = aiConfig.Id;
+                self.Current = aiConfig.ID;
 
                 aaiHandler.Execute(self, aiConfig, cancellationToken).Coroutine();
                 return;

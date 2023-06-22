@@ -42,7 +42,7 @@ namespace ET.Server
             StartProcessConfig startProcessConfig = StartProcessConfigCategory.Instance.Get(processId);
             const string exe = "dotnet";
             string arguments = $"App.dll" + 
-                    $" --Process={startProcessConfig.Id}" +
+                    $" --Process={startProcessConfig.ID}" +
                     $" --AppType=Server" +  
                     $" --StartConfig={Options.Instance.StartConfig}" +
                     $" --Develop={Options.Instance.Develop}" +

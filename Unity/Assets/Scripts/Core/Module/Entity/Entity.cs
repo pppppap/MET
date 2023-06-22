@@ -301,7 +301,7 @@ namespace ET
                 
                 if (preDomain == null)
                 {
-                    this.InstanceId = IdGenerater.Instance.GenerateInstanceId();
+                    this.InstanceId = IDGenerator.Instance.GenerateInstanceId();
                     this.IsRegister = true;
                     
                     // 反序列化出来的需要设置父子关系
@@ -865,7 +865,7 @@ namespace ET
         {
             Type type = typeof (T);
             T component = (T) Entity.Create(type, isFromPool);
-            component.Id = IdGenerater.Instance.GenerateId();
+            component.Id = IDGenerator.Instance.GenerateId();
             component.Parent = this;
 
             EventSystem.Instance.Awake(component);
@@ -876,7 +876,7 @@ namespace ET
         {
             Type type = typeof (T);
             T component = (T) Entity.Create(type, isFromPool);
-            component.Id = IdGenerater.Instance.GenerateId();
+            component.Id = IDGenerator.Instance.GenerateId();
             component.Parent = this;
 
             EventSystem.Instance.Awake(component, a);
@@ -887,7 +887,7 @@ namespace ET
         {
             Type type = typeof (T);
             T component = (T) Entity.Create(type, isFromPool);
-            component.Id = IdGenerater.Instance.GenerateId();
+            component.Id = IDGenerator.Instance.GenerateId();
             component.Parent = this;
 
             EventSystem.Instance.Awake(component, a, b);
@@ -898,7 +898,7 @@ namespace ET
         {
             Type type = typeof (T);
             T component = (T) Entity.Create(type, isFromPool);
-            component.Id = IdGenerater.Instance.GenerateId();
+            component.Id = IDGenerator.Instance.GenerateId();
             component.Parent = this;
 
             EventSystem.Instance.Awake(component, a, b, c);
@@ -909,7 +909,7 @@ namespace ET
         {
             Type type = typeof (T);
             T component = (T) Entity.Create(type, isFromPool);
-            component.Id = IdGenerater.Instance.GenerateId();
+            component.Id = IDGenerator.Instance.GenerateId();
             component.Parent = this;
 
             EventSystem.Instance.Awake(component, a, b, c, d);

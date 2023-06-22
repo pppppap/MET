@@ -29,7 +29,7 @@ namespace ET
             foreach ((ConfigName) config in list)
             {
                 config.AfterEndInit();
-                this.dict.Add(config.Id, config);
+                this.dict.Add(config.ID, config);
             }
 
             this.list.Clear();

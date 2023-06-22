@@ -22,7 +22,8 @@ namespace ET
                 case CodeMode.Client:
                     codes = new List<string>()
                     {
-                        "Assets/Scripts/Codes/Model/Generate/Client/",
+                        "Assets/Scripts/Codes/Model/Config/",
+                        "Assets/Scripts/Codes/Model/Message/",
                         "Assets/Scripts/Codes/Model/Share/",
                         "Assets/Scripts/Codes/Model/Client/",
                         "Assets/Scripts/Codes/ModelView/Client/",
@@ -31,7 +32,8 @@ namespace ET
                 case CodeMode.Server:
                     codes = new List<string>()
                     {
-                        "Assets/Scripts/Codes/Model/Generate/Server/",
+                        "Assets/Scripts/Codes/Model/Config/",
+                        "Assets/Scripts/Codes/Model/Message/",
                         "Assets/Scripts/Codes/Model/Share/",
                         "Assets/Scripts/Codes/Model/Server/",
                         "Assets/Scripts/Codes/Model/Client/",
@@ -43,7 +45,8 @@ namespace ET
                         "Assets/Scripts/Codes/Model/Share/",
                         "Assets/Scripts/Codes/Model/Client/",
                         "Assets/Scripts/Codes/ModelView/Client/",
-                        "Assets/Scripts/Codes/Model/Generate/ClientServer/",
+                        "Assets/Scripts/Codes/Model/Config/",
+                        "Assets/Scripts/Codes/Model/Message/",
                         "Assets/Scripts/Codes/Model/Server/",
                     };
                     break;

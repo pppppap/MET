@@ -27,7 +27,7 @@ namespace ET.Server
                 Game.AddSingleton<TimeInfo>();
                 Game.AddSingleton<Logger>().ILog = new NLogger(Options.Instance.AppType.ToString(), Options.Instance.Process, "../Config/NLog/NLog.config");
                 Game.AddSingleton<ObjectPool>();
-                Game.AddSingleton<IdGenerater>();
+                Game.AddSingleton<IDGenerator>();
                 Game.AddSingleton<EventSystem>();
                 Game.AddSingleton<Root>();
                 

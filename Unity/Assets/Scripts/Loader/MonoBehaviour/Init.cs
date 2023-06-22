@@ -27,7 +27,7 @@ namespace ET
 			Game.AddSingleton<TimeInfo>();
 			Game.AddSingleton<Logger>().ILog = new UnityLogger();
 			Game.AddSingleton<ObjectPool>();
-			Game.AddSingleton<IdGenerater>();
+			Game.AddSingleton<IDGenerator>();
 			Game.AddSingleton<EventSystem>();
 			Game.AddSingleton<TimerComponent>();
 			Game.AddSingleton<CoroutineLockComponent>();
