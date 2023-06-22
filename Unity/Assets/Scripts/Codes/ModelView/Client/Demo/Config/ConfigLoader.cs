@@ -15,23 +15,6 @@ namespace ET.Client
             
             if (Define.IsEditor)
             {
-                string ct = "cs";
-                GlobalConfig globalConfig = Resources.Load<GlobalConfig>("GlobalConfig");
-                CodeMode codeMode = globalConfig.CodeMode;
-                switch (codeMode)
-                {
-                    case CodeMode.Client:
-                        ct = "c";
-                        break;
-                    case CodeMode.Server:
-                        ct = "s";
-                        break;
-                    case CodeMode.ClientServer:
-                        ct = "cs";
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
                 List<string> startConfigs = new List<string>()
                 {
                     "StartMachineConfigCategory", 
@@ -44,11 +27,11 @@ namespace ET.Client
                     string configFilePath;
                     if (startConfigs.Contains(configType.Name))
                     {
-                        configFilePath = $"../Config/Excel/{ct}/{Options.Instance.StartConfig}/{configType.Name}.bytes";    
+                        configFilePath = $"../Config/Excel/{Options.Instance.StartConfig}/{configType.Name}.bytes";
                     }
                     else
                     {
-                        configFilePath = $"../Config/Excel/{ct}/{configType.Name}.bytes";
+                        configFilePath = $"../Config/Excel/{configType.Name}.bytes";
                     }
                     output[configType] = File.ReadAllBytes(configFilePath);
                 }

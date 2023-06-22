@@ -14,14 +14,14 @@ using ProtoBuf;
 
 namespace ET
 {
-    class Table
+    internal class Table
     {
         public string TableName;
         public Dictionary<string, FiledInfo> Fields = new();
         public List<TableData> DataList = new();
     }
 
-    struct FiledInfo
+    internal struct FiledInfo
     {
         public string FilePath;
         public string FieldDesc;
@@ -31,11 +31,11 @@ namespace ET
         public int Col;
     }
 
-    class TableData
+    internal class TableData
     {
         public string FileDir;
         public string FilePath;
-        public SortedDictionary<int, List<(string, System.Object)>> Data = new();
+        public SortedDictionary<int, List<(string, string)>> Data = new();
     }
 
     public static class ExcelExporter
@@ -46,11 +46,10 @@ namespace ET
 
         private const string excelDir = "../Unity/Assets/Config/Excel/";
 
-        private const string clientProtoDir = "../Unity/Assets/Bundles/Config";
         private static Assembly configAssembly;
 
-        private static Dictionary<string, Table> tables = new Dictionary<string, Table>();
-        private static Dictionary<string, ExcelPackage> packages = new Dictionary<string, ExcelPackage>();
+        private static readonly Dictionary<string, Table> tables = new();
+        private static readonly Dictionary<string, ExcelPackage> packages = new();
 
         private static Table GetTable(string tableName)
         {
@@ -317,7 +316,7 @@ namespace ET
                 List<FiledInfo> filedList = new(table.Fields.Values);
                 filedList.Sort((f1, f2) => f1.Col.CompareTo(f2.Col));
 
-                List<(string, System.Object)> oneData = new();
+                List<(string, string)> oneData = new();
                 int id = 0;
                 foreach (FiledInfo filedInfo in filedList)
                 {
@@ -485,6 +484,8 @@ namespace ET
 
             using FileStream file = File.Create(path);
             Serializer.Serialize(file, final);
+
+            Log.Console(final.ToString());
         }
     }
 }
