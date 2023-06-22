@@ -99,7 +99,7 @@ namespace ET
             try
             {
                 //防止编译时裁剪掉protobuf
-                ProtoBuf.WireType.Fixed64.ToString();
+                _ = ProtoBuf.WireType.Fixed64.ToString();
                 
                 template = File.ReadAllText("Template.txt");
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -430,10 +430,18 @@ namespace ET
                     continue;
                 }
 
-                sb.Append($"\t\t/// <summary>{headInfo.FieldDesc}</summary>\n");
-                sb.Append($"\t\t[ProtoMember({headInfo.FieldIndex})]\n");
+                sb.Append($"        /// <summary>{headInfo.FieldDesc}</summary>\n");
+                sb.Append($"        [ProtoMember({headInfo.FieldIndex})]\n");
                 string fieldType = headInfo.FieldType;
-                sb.Append($"\t\tpublic {fieldType} {headInfo.FieldName} {{ get; set; }}\n");
+                sb.Append($"        public {fieldType} {headInfo.FieldName} {{ get; set; }}\n");
+                sb.Append($"\n");
+            }
+            if (sb.Length > 0)
+            {
+                if (sb[^1] == '\n')
+                {
+                    sb.Remove(sb.Length - 1, 1);
+                }
             }
 
             string content = template.Replace("(ConfigName)", protoName).Replace(("(Fields)"), sb.ToString());
