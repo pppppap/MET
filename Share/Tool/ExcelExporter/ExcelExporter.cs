@@ -436,15 +436,10 @@ namespace ET
                 sb.Append($"        public {fieldType} {headInfo.FieldName} {{ get; set; }}\n");
                 sb.Append($"\n");
             }
-            if (sb.Length > 0)
-            {
-                if (sb[^1] == '\n')
-                {
-                    sb.Remove(sb.Length - 1, 1);
-                }
-            }
 
-            string content = template.Replace("(ConfigName)", protoName).Replace(("(Fields)"), sb.ToString());
+            var s = sb.ToString().TrimEnd();
+
+            string content = template.Replace("(ConfigName)", protoName).Replace(("(Fields)"), s);
             sw.Write(content);
         }
 

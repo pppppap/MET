@@ -7,7 +7,7 @@ namespace ET
 {
     [ProtoContract]
     [Config]
-    public partial class StartProcessConfigCategory : ConfigSingleton<StartProcessConfigCategory>, IMerge
+    public partial class StartProcessConfigCategory: ConfigSingleton<StartProcessConfigCategory>, IMerge
     {
         [ProtoIgnore]
         [BsonIgnore]
@@ -23,7 +23,7 @@ namespace ET
             this.list.AddRange(s.list);
         }
 
-        [ProtoAfterDeserialization]        
+        [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
             foreach (StartProcessConfig config in list)
@@ -31,6 +31,7 @@ namespace ET
                 config.AfterEndInit();
                 this.dict.Add(config.Id, config);
             }
+
             this.list.Clear();
             
             this.AfterEndInit();
@@ -83,6 +84,5 @@ namespace ET
         /// <summary>内网端口</summary>
         [ProtoMember(3)]
         public int InnerPort { get; set; }
-
     }
 }

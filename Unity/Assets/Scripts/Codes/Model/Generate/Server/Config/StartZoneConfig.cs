@@ -7,7 +7,7 @@ namespace ET
 {
     [ProtoContract]
     [Config]
-    public partial class StartZoneConfigCategory : ConfigSingleton<StartZoneConfigCategory>, IMerge
+    public partial class StartZoneConfigCategory: ConfigSingleton<StartZoneConfigCategory>, IMerge
     {
         [ProtoIgnore]
         [BsonIgnore]
@@ -23,7 +23,7 @@ namespace ET
             this.list.AddRange(s.list);
         }
 
-        [ProtoAfterDeserialization]        
+        [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
             foreach (StartZoneConfig config in list)
@@ -31,8 +31,9 @@ namespace ET
                 config.AfterEndInit();
                 this.dict.Add(config.Id, config);
             }
+
             this.list.Clear();
-            
+
             this.AfterEndInit();
         }
 
@@ -83,6 +84,5 @@ namespace ET
         /// <summary>数据库名</summary>
         [ProtoMember(3)]
         public string DBName { get; set; }
-
     }
 }

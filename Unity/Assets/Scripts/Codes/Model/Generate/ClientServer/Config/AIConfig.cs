@@ -7,7 +7,7 @@ namespace ET
 {
     [ProtoContract]
     [Config]
-    public partial class AIConfigCategory : ConfigSingleton<AIConfigCategory>, IMerge
+    public partial class AIConfigCategory: ConfigSingleton<AIConfigCategory>, IMerge
     {
         [ProtoIgnore]
         [BsonIgnore]
@@ -23,7 +23,7 @@ namespace ET
             this.list.AddRange(s.list);
         }
 
-        [ProtoAfterDeserialization]        
+        [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
             foreach (AIConfig config in list)
@@ -31,6 +31,7 @@ namespace ET
                 config.AfterEndInit();
                 this.dict.Add(config.Id, config);
             }
+
             this.list.Clear();
             
             this.AfterEndInit();
@@ -91,6 +92,5 @@ namespace ET
         /// <summary>节点参数</summary>
         [ProtoMember(5)]
         public int[] NodeParams { get; set; }
-
     }
 }

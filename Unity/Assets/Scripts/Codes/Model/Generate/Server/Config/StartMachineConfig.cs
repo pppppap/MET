@@ -33,7 +33,7 @@ namespace ET
             }
 
             this.list.Clear();
-
+            
             this.AfterEndInit();
         }
 

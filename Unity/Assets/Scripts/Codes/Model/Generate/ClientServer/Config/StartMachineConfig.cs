@@ -7,7 +7,7 @@ namespace ET
 {
     [ProtoContract]
     [Config]
-    public partial class StartMachineConfigCategory : ConfigSingleton<StartMachineConfigCategory>, IMerge
+    public partial class StartMachineConfigCategory: ConfigSingleton<StartMachineConfigCategory>, IMerge
     {
         [ProtoIgnore]
         [BsonIgnore]
@@ -23,7 +23,7 @@ namespace ET
             this.list.AddRange(s.list);
         }
 
-        [ProtoAfterDeserialization]        
+        [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
             foreach (StartMachineConfig config in list)
@@ -31,6 +31,7 @@ namespace ET
                 config.AfterEndInit();
                 this.dict.Add(config.Id, config);
             }
+
             this.list.Clear();
             
             this.AfterEndInit();
@@ -87,6 +88,5 @@ namespace ET
         /// <summary>守护进程端口</summary>
         [ProtoMember(4)]
         public string WatcherPort { get; set; }
-
     }
 }

@@ -7,7 +7,7 @@ namespace ET
 {
     [ProtoContract]
     [Config]
-    public partial class (ConfigName)Category : ConfigSingleton<(ConfigName)Category>, IMerge
+    public partial class (ConfigName)Category: ConfigSingleton<(ConfigName)Category>, IMerge
     {
         [ProtoIgnore]
         [BsonIgnore]
@@ -23,7 +23,7 @@ namespace ET
             this.list.AddRange(s.list);
         }
 
-        [ProtoAfterDeserialization]        
+        [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
             foreach ((ConfigName) config in list)
@@ -31,6 +31,7 @@ namespace ET
                 config.AfterEndInit();
                 this.dict.Add(config.Id, config);
             }
+
             this.list.Clear();
             
             this.AfterEndInit();
