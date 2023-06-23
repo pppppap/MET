@@ -1,5 +1,5 @@
 {"list":[
-	{"_t":"TestConfig","_id":101,"ID":101,"Type":1,"AIConfigId":1,"Order":1,"Name":"AI_Attack","NodeParams":[]},
-	{"_t":"TestConfig","_id":102,"ID":102,"Type":2,"AIConfigId":1,"Order":2,"Name":"AI_XunLuo","NodeParams":[]},
-	{"_t":"TestConfig","_id":201,"ID":201,"Type":3,"AIConfigId":2,"Order":1,"Name":"AI_XunLuo","NodeParams":[]}
+	{"_t":"TestConfig","_id":101,"ID":101,"Type":1,"AIConfigId":1,"Order":1,"Name":"AI_Attack","NodeParams":[1,2,3,4]},
+	{"_t":"TestConfig","_id":102,"ID":102,"Type":2,"AIConfigId":1,"Order":2,"Name":"AI_XunLuo","NodeParams":[1]},
+	{"_t":"TestConfig","_id":201,"ID":201,"Type":3,"AIConfigId":2,"Order":1,"Name":"AI_XunLuo","NodeParams":[1,2,3]}
 ]}

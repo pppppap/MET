@@ -10,39 +10,46 @@ namespace ET.Server
         public override Dictionary<Type, byte[]> Handle(ConfigComponent.GetAllConfigBytes args)
         {
             Dictionary<Type, byte[]> output = new Dictionary<Type, byte[]>();
-            List<string> startConfigs = new List<string>()
-            {
-                "StartMachineConfigCategory", 
-                "StartProcessConfigCategory", 
-                "StartSceneConfigCategory", 
-                "StartZoneConfigCategory",
-            };
             HashSet<Type> configTypes = EventSystem.Instance.GetTypes(typeof (ConfigAttribute));
             foreach (Type configType in configTypes)
             {
-                string configFilePath;
-                if (startConfigs.Contains(configType.Name))
-                {
-                    configFilePath = $"../Config/Excel/{Options.Instance.StartConfig}/{configType.Name}.bytes";
-                }
-                else
-                {
-                    configFilePath = $"../Config/Excel/{configType.Name}.bytes";
-                }
+                string configFilePath = GetConfigFilePath.getConfigFilePath(configType.Name);
                 output[configType] = File.ReadAllBytes(configFilePath);
             }
 
             return output;
         }
     }
-    
+
     [Invoke]
     public class GetOneConfigBytes: AInvokeHandler<ConfigComponent.GetOneConfigBytes, byte[]>
     {
         public override byte[] Handle(ConfigComponent.GetOneConfigBytes args)
         {
-            byte[] configBytes = File.ReadAllBytes($"../Config/{args.ConfigName}.bytes");
-            return configBytes;
+            string configFilePath = GetConfigFilePath.getConfigFilePath(args.ConfigName);
+            return File.ReadAllBytes(configFilePath);
+        }
+    }
+
+    public static class GetConfigFilePath
+    {
+        public static string getConfigFilePath(string configName)
+        {
+            string configFilePath;
+            switch (configName)
+            {
+                case "StartMachineConfigCategory":
+                case "StartProcessConfigCategory":
+                case "StartSceneConfigCategory":
+                case "StartZoneConfigCategory":
+                    configFilePath = $"../Config/Excel/{Options.Instance.StartConfig}/{configName}.bytes";
+                    break;
+                default:
+                    configFilePath = $"../Config/Excel/{configName}.bytes";
+                    break;
+            }
+
+            return configFilePath;
         }
     }
 }

@@ -12,27 +12,12 @@ namespace ET.Client
         {
             Dictionary<Type, byte[]> output = new Dictionary<Type, byte[]>();
             HashSet<Type> configTypes = EventSystem.Instance.GetTypes(typeof (ConfigAttribute));
-            
+
             if (Define.IsEditor)
             {
-                List<string> startConfigs = new List<string>()
-                {
-                    "StartMachineConfigCategory", 
-                    "StartProcessConfigCategory", 
-                    "StartSceneConfigCategory", 
-                    "StartZoneConfigCategory",
-                };
                 foreach (Type configType in configTypes)
                 {
-                    string configFilePath;
-                    if (startConfigs.Contains(configType.Name))
-                    {
-                        configFilePath = $"../Config/Excel/{Options.Instance.StartConfig}/{configType.Name}.bytes";
-                    }
-                    else
-                    {
-                        configFilePath = $"../Config/Excel/{configType.Name}.bytes";
-                    }
+                    string configFilePath = GetConfigFilePath.getConfigFilePath(configType.Name);
                     output[configType] = File.ReadAllBytes(configFilePath);
                 }
             }
@@ -42,7 +27,7 @@ namespace ET.Client
                 {
                     const string configBundleName = "config.unity3d";
                     ResourcesComponent.Instance.LoadBundle(configBundleName);
-                    
+
                     foreach (Type configType in configTypes)
                     {
                         TextAsset v = ResourcesComponent.Instance.GetAsset(configBundleName, configType.Name) as TextAsset;
@@ -54,15 +39,45 @@ namespace ET.Client
             return output;
         }
     }
-    
+
     [Invoke]
     public class GetOneConfigBytes: AInvokeHandler<ConfigComponent.GetOneConfigBytes, byte[]>
     {
         public override byte[] Handle(ConfigComponent.GetOneConfigBytes args)
         {
-            //TextAsset v = ResourcesComponent.Instance.GetAsset("config.unity3d", configName) as TextAsset;
-            //return v.bytes;
-            throw new NotImplementedException("client cant use LoadOneConfig");
+            if (Define.IsEditor)
+            {
+                string configFilePath = GetConfigFilePath.getConfigFilePath(args.ConfigName);
+                return File.ReadAllBytes(configFilePath);
+            }
+            else
+            {
+                TextAsset v = ResourcesComponent.Instance.GetAsset("config.unity3d", args.ConfigName) as TextAsset;
+                return v.bytes;
+                // throw new NotImplementedException("client cant use LoadOneConfig");
+            }
+        }
+    }
+
+    public static class GetConfigFilePath
+    {
+        public static string getConfigFilePath(string configName)
+        {
+            string configFilePath;
+            switch (configName)
+            {
+                case "StartMachineConfigCategory":
+                case "StartProcessConfigCategory":
+                case "StartSceneConfigCategory":
+                case "StartZoneConfigCategory":
+                    configFilePath = $"../Config/Excel/{Options.Instance.StartConfig}/{configName}.bytes";
+                    break;
+                default:
+                    configFilePath = $"../Config/Excel/{configName}.bytes";
+                    break;
+            }
+
+            return configFilePath;
         }
     }
 }
