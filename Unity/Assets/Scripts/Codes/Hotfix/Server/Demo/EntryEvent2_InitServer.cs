@@ -19,17 +19,18 @@ namespace ET.Server
 
             Root.Instance.Scene.AddComponent<NavmeshComponent>();
 
-            StartProcessConfig processConfig = StartProcessConfigCategory.Instance.Get(Options.Instance.Process);
             switch (Options.Instance.AppType)
             {
                 case AppType.Server:
                 {
+                    StartProcessConfig processConfig = StartProcessConfigCategory.Instance.Get(Options.Instance.Process);
                     Root.Instance.Scene.AddComponent<NetInnerComponent, IPEndPoint>(processConfig.InnerIPPort);
 
                     var processScenes = StartSceneConfigCategory.Instance.GetByProcess(Options.Instance.Process);
                     foreach (StartSceneConfig startConfig in processScenes)
                     {
-                        await SceneFactory.CreateServerScene(ServerSceneManagerComponent.Instance, startConfig.ID, startConfig.InstanceId, startConfig.Zone, startConfig.Name,
+                        await SceneFactory.CreateServerScene(ServerSceneManagerComponent.Instance, startConfig.ID, startConfig.InstanceId,
+                            startConfig.Zone, startConfig.Name,
                             startConfig.Type, startConfig);
                     }
 
@@ -40,7 +41,8 @@ namespace ET.Server
                     StartMachineConfig startMachineConfig = WatcherHelper.GetThisMachineConfig();
                     WatcherComponent watcherComponent = Root.Instance.Scene.AddComponent<WatcherComponent>();
                     watcherComponent.Start(Options.Instance.CreateScenes);
-                    Root.Instance.Scene.AddComponent<NetInnerComponent, IPEndPoint>(NetworkHelper.ToIPEndPoint($"{startMachineConfig.InnerIP}:{startMachineConfig.WatcherPort}"));
+                    Root.Instance.Scene.AddComponent<NetInnerComponent, IPEndPoint>(
+                        NetworkHelper.ToIPEndPoint($"{startMachineConfig.InnerIP}:{startMachineConfig.WatcherPort}"));
                     break;
                 }
                 case AppType.GameTool:
