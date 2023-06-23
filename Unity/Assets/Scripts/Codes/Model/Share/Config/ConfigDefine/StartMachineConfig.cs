@@ -9,13 +9,18 @@ namespace ET
     [Config]
     public partial class StartMachineConfigCategory: ConfigSingleton<StartMachineConfigCategory>, IMerge
     {
-        [ProtoIgnore]
-        [BsonIgnore]
-        private Dictionary<int, StartMachineConfig> dict = new Dictionary<int, StartMachineConfig>();
-
         [BsonElement]
         [ProtoMember(1)]
         private List<StartMachineConfig> list = new List<StartMachineConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, StartMachineConfig> dict = new();
+
+        public StartMachineConfig Get(int id)
+        {
+            return this.dict[id];
+        }
 
         public void Merge(object o)
         {
@@ -26,47 +31,18 @@ namespace ET
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (StartMachineConfig config in list)
+            foreach (var config in list)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.list.Clear();
-
             this.AfterEndInit();
         }
 
-        public StartMachineConfig Get(int id)
+        public List<StartMachineConfig> GetAll()
         {
-            this.dict.TryGetValue(id, out StartMachineConfig item);
-
-            if (item == null)
-            {
-                throw new Exception($"配置找不到，配置表名: {nameof (StartMachineConfig)}，配置id: {id}");
-            }
-
-            return item;
-        }
-
-        public bool Contain(int id)
-        {
-            return this.dict.ContainsKey(id);
-        }
-
-        public Dictionary<int, StartMachineConfig> GetAll()
-        {
-            return this.dict;
-        }
-
-        public StartMachineConfig GetOne()
-        {
-            if (this.dict == null || this.dict.Count <= 0)
-            {
-                return null;
-            }
-
-            return this.dict.Values.GetEnumerator().Current;
+            return this.list;
         }
     }
 

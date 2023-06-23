@@ -9,13 +9,18 @@ namespace ET
     [Config]
     public partial class AIConfigCategory: ConfigSingleton<AIConfigCategory>, IMerge
     {
-        [ProtoIgnore]
-        [BsonIgnore]
-        private Dictionary<int, AIConfig> dict = new Dictionary<int, AIConfig>();
-
         [BsonElement]
         [ProtoMember(1)]
         private List<AIConfig> list = new List<AIConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, AIConfig> dict = new();
+
+        public AIConfig Get(int id)
+        {
+            return this.dict[id];
+        }
 
         public void Merge(object o)
         {
@@ -26,47 +31,18 @@ namespace ET
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (AIConfig config in list)
+            foreach (var config in list)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.list.Clear();
-
             this.AfterEndInit();
         }
 
-        public AIConfig Get(int id)
+        public List<AIConfig> GetAll()
         {
-            this.dict.TryGetValue(id, out AIConfig item);
-
-            if (item == null)
-            {
-                throw new Exception($"配置找不到，配置表名: {nameof (AIConfig)}，配置id: {id}");
-            }
-
-            return item;
-        }
-
-        public bool Contain(int id)
-        {
-            return this.dict.ContainsKey(id);
-        }
-
-        public Dictionary<int, AIConfig> GetAll()
-        {
-            return this.dict;
-        }
-
-        public AIConfig GetOne()
-        {
-            if (this.dict == null || this.dict.Count <= 0)
-            {
-                return null;
-            }
-
-            return this.dict.Values.GetEnumerator().Current;
+            return this.list;
         }
     }
 

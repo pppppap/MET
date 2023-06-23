@@ -9,13 +9,18 @@ namespace ET
     [Config]
     public partial class StartSceneConfigCategory: ConfigSingleton<StartSceneConfigCategory>, IMerge
     {
-        [ProtoIgnore]
-        [BsonIgnore]
-        private Dictionary<int, StartSceneConfig> dict = new Dictionary<int, StartSceneConfig>();
-
         [BsonElement]
         [ProtoMember(1)]
         private List<StartSceneConfig> list = new List<StartSceneConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, StartSceneConfig> dict = new();
+
+        public StartSceneConfig Get(int id)
+        {
+            return this.dict[id];
+        }
 
         public void Merge(object o)
         {
@@ -26,47 +31,18 @@ namespace ET
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (StartSceneConfig config in list)
+            foreach (var config in list)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.list.Clear();
-
             this.AfterEndInit();
         }
 
-        public StartSceneConfig Get(int id)
+        public List<StartSceneConfig> GetAll()
         {
-            this.dict.TryGetValue(id, out StartSceneConfig item);
-
-            if (item == null)
-            {
-                throw new Exception($"配置找不到，配置表名: {nameof (StartSceneConfig)}，配置id: {id}");
-            }
-
-            return item;
-        }
-
-        public bool Contain(int id)
-        {
-            return this.dict.ContainsKey(id);
-        }
-
-        public Dictionary<int, StartSceneConfig> GetAll()
-        {
-            return this.dict;
-        }
-
-        public StartSceneConfig GetOne()
-        {
-            if (this.dict == null || this.dict.Count <= 0)
-            {
-                return null;
-            }
-
-            return this.dict.Values.GetEnumerator().Current;
+            return this.list;
         }
     }
 

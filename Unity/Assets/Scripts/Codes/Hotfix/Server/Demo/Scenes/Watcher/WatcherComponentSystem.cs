@@ -26,7 +26,7 @@ namespace ET.Server
         {
             string[] localIP = NetworkHelper.GetAddressIPs();
             var processConfigs = StartProcessConfigCategory.Instance.GetAll();
-            foreach (StartProcessConfig startProcessConfig in processConfigs.Values)
+            foreach (StartProcessConfig startProcessConfig in processConfigs)
             {
                 if (!WatcherHelper.IsThisMachine(startProcessConfig.InnerIP, localIP))
                 {

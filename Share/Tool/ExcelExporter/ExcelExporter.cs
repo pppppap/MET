@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,13 +29,14 @@ namespace ET
         public string FieldType;
         public int FieldIndex;
         public int Col;
+        public bool IndexKey;
     }
 
     internal class TableData
     {
         public string FileDir;
         public string FilePath;
-        public SortedDictionary<int, List<(string, string)>> Data = new();
+        public List<List<(string, string)>> Data = new();
     }
 
     public static class ExcelExporter
@@ -235,6 +236,8 @@ namespace ET
             const int FieldDescRow = 2; // 字段描述行
             const int FieldNameRow = 3; // 字段名行
             const int FieldTypeRow = 4; // 字段类型行
+            const int IndexRow = 5; // 索引标记行
+            const int DataBeginRow = 6; // 数据开始行
 
             int filedIndex = 1;
             for (int col = 2; col <= worksheet.Dimension.End.Column; ++col)
@@ -260,6 +263,25 @@ namespace ET
                 string fieldDesc = worksheet.Cells[FieldDescRow, col].Text.Trim();
                 string fieldType = worksheet.Cells[FieldTypeRow, col].Text.Trim();
 
+                bool indexFlag = false;
+                string indexStr = worksheet.Cells[IndexRow, col].Text.Trim().ToLower();
+                if (indexStr.Length > 0)
+                {
+                    if (indexStr == "t")
+                    {
+                        indexFlag = true;
+                    }
+                    else if (indexStr == "f")
+                    {
+                        indexFlag = false;
+                    }
+                    else
+                    {
+                        Log.Console("xxxxxxxxx " + worksheet.Cells[IndexRow, col].Text);
+                        throw new Exception($"{filepath}表{tableName}第{col}列索引标记配置错误{indexStr}");
+                    }
+                }
+
                 if (table.Fields.TryGetValue(fieldName, out FiledInfo filedInfo))
                 {
                     if (filedInfo.FilePath == filepath)
@@ -281,7 +303,8 @@ namespace ET
                         FieldDesc = fieldDesc,
                         FieldType = fieldType,
                         FieldIndex = filedIndex++,
-                        Col = col
+                        Col = col,
+                        IndexKey = indexFlag,
                     };
                 }
             }
@@ -292,7 +315,7 @@ namespace ET
             }
 
             // 解析数据
-            for (int row = FieldTypeRow + 1; row <= worksheet.Dimension.End.Row; ++row)
+            for (int row = DataBeginRow; row <= worksheet.Dimension.End.Row; ++row)
             {
                 string ignoreFlag = worksheet.Cells[row, 1].Text.Trim().ToLower();
                 if (ignoreFlag.Length > 0)
@@ -310,18 +333,13 @@ namespace ET
                 filedList.Sort((f1, f2) => f1.Col.CompareTo(f2.Col));
 
                 List<(string, string)> oneData = new();
-                int id = 0;
                 foreach (FiledInfo filedInfo in filedList)
                 {
                     var data = Convert(filedInfo.FieldType, worksheet.Cells[row, filedInfo.Col].Text.Trim());
                     oneData.Add((filedInfo.FieldName, data));
-                    if (filedInfo.FieldName == "ID")
-                    {
-                        id = System.Convert.ToInt32(data);
-                    }
                 }
 
-                tableData.Data[id] = oneData;
+                tableData.Data.Add(oneData);
             }
         }
 
@@ -341,18 +359,85 @@ namespace ET
             using FileStream txt = new FileStream(exportPath, FileMode.Create);
             using StreamWriter sw = new StreamWriter(txt);
 
-            StringBuilder sb = new StringBuilder();
-            foreach ((string _, FiledInfo filedInfo) in classField)
+            string content = template.Replace("(ConfigName)", protoName);
+
             {
-                sb.Append($"        /// <summary>{filedInfo.FieldDesc}</summary>\n");
-                sb.Append($"        [ProtoMember({filedInfo.FieldIndex})]\n");
-                sb.Append($"        public {filedInfo.FieldType} {filedInfo.FieldName} {{ get; set; }}\n");
-                sb.Append($"\n");
+                StringBuilder sb = new StringBuilder();
+                foreach ((string _, FiledInfo filedInfo) in classField)
+                {
+                    sb.Append($"        /// <summary>{filedInfo.FieldDesc}</summary>\n");
+                    sb.Append($"        [ProtoMember({filedInfo.FieldIndex})]\n");
+                    sb.Append($"        public {filedInfo.FieldType} {filedInfo.FieldName} {{ get; set; }}\n");
+                    sb.Append('\n');
+                }
+
+                content = content.Replace("(Fields)", sb.ToString().TrimEnd());
             }
 
-            var s = sb.ToString().TrimEnd();
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach ((string _, FiledInfo filedInfo) in classField)
+                {
+                    if (!filedInfo.IndexKey)
+                    {
+                        continue;
+                    }
 
-            string content = template.Replace("(ConfigName)", protoName).Replace(("(Fields)"), s);
+                    if (filedInfo.FieldName == "ID")
+                    {
+                        sb.Append($"        [ProtoIgnore]\n");
+                        sb.Append($"        [BsonIgnore]\n");
+                        sb.Append($"        private readonly Dictionary<int, {protoName}> dict = new();\n");
+                        sb.Append('\n');
+                        sb.Append($"        public {protoName} Get(int id)\n");
+                        sb.Append("        {\n");
+                        sb.Append($"            return this.dict[id];\n");
+                        sb.Append("        }\n");
+                        sb.Append('\n');
+                    }
+                    else
+                    {
+                        sb.Append($"        [ProtoIgnore]\n");
+                        sb.Append($"        [BsonIgnore]\n");
+                        sb.Append($"        private readonly Dictionary<{filedInfo.FieldType}, {protoName}> dictBy{filedInfo.FieldName} = new();\n");
+                        sb.Append('\n');
+                        sb.Append($"        public {protoName} GetBy{filedInfo.FieldName}({filedInfo.FieldType} {filedInfo.FieldName})\n");
+                        sb.Append("        {\n");
+                        sb.Append($"            return this.dictBy{filedInfo.FieldName}[{filedInfo.FieldName}];\n");
+                        sb.Append("        }\n");
+                        sb.Append('\n');
+                    }
+                }
+
+                content = content.Replace("(DictOp)", sb.ToString().TrimEnd());
+            }
+
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("            foreach (var config in list)\n");
+                sb.Append("            {\n");
+                sb.Append("                config.AfterEndInit();\n");
+                foreach ((string _, FiledInfo filedInfo) in classField)
+                {
+                    if (!filedInfo.IndexKey)
+                    {
+                        continue;
+                    }
+
+                    if (filedInfo.FieldName == "ID")
+                    {
+                        sb.Append($"                this.dict.Add(config.ID, config);\n");
+                    }
+                    else
+                    {
+                        sb.Append($"                this.dictBy{filedInfo.FieldName}.Add(config.{filedInfo.FieldName}, config);\n");
+                    }
+                }
+                sb.Append("            }\n");
+
+                content = content.Replace("(DictInit)", sb.ToString().TrimEnd());
+            }
+
             sw.Write(content);
         }
 
@@ -367,7 +452,7 @@ namespace ET
             sb.Append("{\"list\":[\n");
 
             int i = 0;
-            foreach (var oneData in tableData.Data.Values)
+            foreach (var oneData in tableData.Data)
             {
                 sb.Append("\t{");
                 sb.Append($"\"_t\":\"{tableName}\"");
@@ -383,7 +468,7 @@ namespace ET
 
                 sb.Append('}');
 
-                if (i++ != tableData.Data.Values.Count - 1)
+                if (i++ != tableData.Data.Count - 1)
                 {
                     sb.Append(',');
                 }

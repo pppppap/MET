@@ -9,13 +9,11 @@ namespace ET
     [Config]
     public partial class (ConfigName)Category: ConfigSingleton<(ConfigName)Category>, IMerge
     {
-        [ProtoIgnore]
-        [BsonIgnore]
-        private Dictionary<int, (ConfigName)> dict = new Dictionary<int, (ConfigName)>();
-
         [BsonElement]
         [ProtoMember(1)]
         private List<(ConfigName)> list = new List<(ConfigName)>();
+
+(DictOp)
 
         public void Merge(object o)
         {
@@ -26,47 +24,14 @@ namespace ET
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach ((ConfigName) config in list)
-            {
-                config.AfterEndInit();
-                this.dict.Add(config.ID, config);
-            }
-
-            this.list.Clear();
+(DictInit)
 
             this.AfterEndInit();
         }
 
-        public (ConfigName) Get(int id)
+        public List<(ConfigName)> GetAll()
         {
-            this.dict.TryGetValue(id, out (ConfigName) item);
-
-            if (item == null)
-            {
-                throw new Exception($"配置找不到，配置表名: {nameof ((ConfigName))}，配置id: {id}");
-            }
-
-            return item;
-        }
-
-        public bool Contain(int id)
-        {
-            return this.dict.ContainsKey(id);
-        }
-
-        public Dictionary<int, (ConfigName)> GetAll()
-        {
-            return this.dict;
-        }
-
-        public (ConfigName) GetOne()
-        {
-            if (this.dict == null || this.dict.Count <= 0)
-            {
-                return null;
-            }
-
-            return this.dict.Values.GetEnumerator().Current;
+            return this.list;
         }
     }
 

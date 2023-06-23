@@ -19,16 +19,16 @@ namespace ET
 
 		public override void AfterEndInit()
 		{
-			foreach (var kv in this.GetAll())
+			foreach (var cfg in this.GetAll())
 			{
 				SortedDictionary<int, AIConfig> aiNodeConfig;
-				if (!this.AIConfigs.TryGetValue(kv.Value.AIConfigId, out aiNodeConfig))
+				if (!this.AIConfigs.TryGetValue(cfg.AIConfigId, out aiNodeConfig))
 				{
 					aiNodeConfig = new SortedDictionary<int, AIConfig>();
-					this.AIConfigs.Add(kv.Value.AIConfigId, aiNodeConfig);
+					this.AIConfigs.Add(cfg.AIConfigId, aiNodeConfig);
 				}
 				
-				aiNodeConfig.Add(kv.Key, kv.Value);
+				aiNodeConfig.Add(cfg.ID, cfg);
 			}
 		}
 	}

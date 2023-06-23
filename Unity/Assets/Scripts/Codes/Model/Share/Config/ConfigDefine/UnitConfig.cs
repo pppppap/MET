@@ -9,13 +9,18 @@ namespace ET
     [Config]
     public partial class UnitConfigCategory: ConfigSingleton<UnitConfigCategory>, IMerge
     {
-        [ProtoIgnore]
-        [BsonIgnore]
-        private Dictionary<int, UnitConfig> dict = new Dictionary<int, UnitConfig>();
-
         [BsonElement]
         [ProtoMember(1)]
         private List<UnitConfig> list = new List<UnitConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, UnitConfig> dict = new();
+
+        public UnitConfig Get(int id)
+        {
+            return this.dict[id];
+        }
 
         public void Merge(object o)
         {
@@ -26,47 +31,18 @@ namespace ET
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (UnitConfig config in list)
+            foreach (var config in list)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.list.Clear();
-
             this.AfterEndInit();
         }
 
-        public UnitConfig Get(int id)
+        public List<UnitConfig> GetAll()
         {
-            this.dict.TryGetValue(id, out UnitConfig item);
-
-            if (item == null)
-            {
-                throw new Exception($"配置找不到，配置表名: {nameof (UnitConfig)}，配置id: {id}");
-            }
-
-            return item;
-        }
-
-        public bool Contain(int id)
-        {
-            return this.dict.ContainsKey(id);
-        }
-
-        public Dictionary<int, UnitConfig> GetAll()
-        {
-            return this.dict;
-        }
-
-        public UnitConfig GetOne()
-        {
-            if (this.dict == null || this.dict.Count <= 0)
-            {
-                return null;
-            }
-
-            return this.dict.Values.GetEnumerator().Current;
+            return this.list;
         }
     }
 

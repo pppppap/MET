@@ -9,13 +9,27 @@ namespace ET
     [Config]
     public partial class TestConfigCategory: ConfigSingleton<TestConfigCategory>, IMerge
     {
-        [ProtoIgnore]
-        [BsonIgnore]
-        private Dictionary<int, TestConfig> dict = new Dictionary<int, TestConfig>();
-
         [BsonElement]
         [ProtoMember(1)]
         private List<TestConfig> list = new List<TestConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, TestConfig> dict = new();
+
+        public TestConfig Get(int id)
+        {
+            return this.dict[id];
+        }
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, TestConfig> dictByType = new();
+
+        public TestConfig GetByType(int Type)
+        {
+            return this.dictByType[Type];
+        }
 
         public void Merge(object o)
         {
@@ -26,47 +40,19 @@ namespace ET
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (TestConfig config in list)
+            foreach (var config in list)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
+                this.dictByType.Add(config.Type, config);
             }
-
-            this.list.Clear();
 
             this.AfterEndInit();
         }
 
-        public TestConfig Get(int id)
+        public List<TestConfig> GetAll()
         {
-            this.dict.TryGetValue(id, out TestConfig item);
-
-            if (item == null)
-            {
-                throw new Exception($"配置找不到，配置表名: {nameof (TestConfig)}，配置id: {id}");
-            }
-
-            return item;
-        }
-
-        public bool Contain(int id)
-        {
-            return this.dict.ContainsKey(id);
-        }
-
-        public Dictionary<int, TestConfig> GetAll()
-        {
-            return this.dict;
-        }
-
-        public TestConfig GetOne()
-        {
-            if (this.dict == null || this.dict.Count <= 0)
-            {
-                return null;
-            }
-
-            return this.dict.Values.GetEnumerator().Current;
+            return this.list;
         }
     }
 
@@ -77,20 +63,24 @@ namespace ET
         [ProtoMember(1)]
         public int ID { get; set; }
 
-        /// <summary>所属ai</summary>
+        /// <summary>类型</summary>
         [ProtoMember(2)]
+        public int Type { get; set; }
+
+        /// <summary>所属ai</summary>
+        [ProtoMember(3)]
         public int AIConfigId { get; set; }
 
         /// <summary>此ai中的顺序</summary>
-        [ProtoMember(3)]
+        [ProtoMember(4)]
         public int Order { get; set; }
 
         /// <summary>名字</summary>
-        [ProtoMember(4)]
+        [ProtoMember(5)]
         public string Name { get; set; }
 
         /// <summary>节点参数</summary>
-        [ProtoMember(5)]
+        [ProtoMember(6)]
         public int[] NodeParams { get; set; }
     }
 }
