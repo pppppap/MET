@@ -42,7 +42,7 @@ namespace ET
     {
         private static string template;
 
-        private const string ClassDir = "../Unity/Assets/Scripts/Codes/Model/Config/ConfigDefine";
+        private const string ClassDir = "../Unity/Assets/Scripts/Codes/Model/Share/Config/ConfigDefine";
 
         private const string excelDir = "../Unity/Assets/Config/Excel/";
 

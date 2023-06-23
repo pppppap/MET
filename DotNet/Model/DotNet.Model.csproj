@@ -25,50 +25,6 @@
     </PropertyGroup>
     <ItemGroup>
 
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigDefine\AIConfig.cs">
-          <Link>Config\ConfigDefine\AIConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigDefine\StartMachineConfig.cs">
-          <Link>Config\ConfigDefine\StartMachineConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigDefine\StartProcessConfig.cs">
-          <Link>Config\ConfigDefine\StartProcessConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigDefine\StartSceneConfig.cs">
-          <Link>Config\ConfigDefine\StartSceneConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigDefine\StartZoneConfig.cs">
-          <Link>Config\ConfigDefine\StartZoneConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigDefine\TestConfig.cs">
-          <Link>Config\ConfigDefine\TestConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigDefine\UnitConfig.cs">
-          <Link>Config\ConfigDefine\UnitConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigPartial\StartProcessConfig.cs">
-          <Link>Config\ConfigPartial\StartProcessConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Config\ConfigPartial\StartSceneConfig.cs">
-          <Link>Config\ConfigPartial\StartSceneConfig.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Message\InnerMessage_S_20001.cs">
-          <Link>Message\InnerMessage_S_20001.cs</Link>
-        </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Message\OuterMessage_C_10001.cs">
-          <Link>Message\OuterMessage_C_10001.cs</Link>
-        </Compile>
-
         <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Server\**\*.cs"> 
             <Link>Server\%(RecursiveDir)%(FileName)%(Extension)</Link>
         </Compile>
