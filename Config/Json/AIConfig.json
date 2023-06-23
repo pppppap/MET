@@ -1,3 +1,3 @@
 {"list":[
-	{"_t":"AIConfig","_id":201,"AIConfigId":2,"Order":1,"Name":"AI_XunLuo","Desc":"巡逻","NodeParams":[]}
+	{"_t":"AIConfig","_id":201,"ID":201,"AIConfigId":2,"Order":1,"Name":"AI_XunLuo","Desc":"巡逻","NodeParams":[]}
 ]}

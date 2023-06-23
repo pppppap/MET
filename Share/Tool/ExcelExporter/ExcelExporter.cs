@@ -123,13 +123,6 @@ namespace ET
                         ExportExcelProtobuf(table.TableName, tableData);
                     }
                 }
-                //
-                // if (Directory.Exists(clientProtoDir))
-                // {
-                //     Directory.Delete(clientProtoDir, true);
-                // }
-                //
-                // FileHelper.CopyDirectory("../Config/Excel/c", clientProtoDir);
 
                 Log.Console("Export Excel Sucess!");
             }
@@ -380,13 +373,12 @@ namespace ET
                 sb.Append($"\"_t\":\"{tableName}\"");
                 foreach ((string fieldName, object data) in oneData)
                 {
-                    string fieldN = fieldName;
-                    if (fieldN == "ID")
+                    if (fieldName == "ID")
                     {
-                        fieldN = "_id";
+                        sb.Append($",\"_id\":{data}");
                     }
 
-                    sb.Append($",\"{fieldN}\":{data}");
+                    sb.Append($",\"{fieldName}\":{data}");
                 }
 
                 sb.Append('}');
@@ -484,8 +476,6 @@ namespace ET
 
             using FileStream file = File.Create(path);
             Serializer.Serialize(file, final);
-
-            Log.Console(final.ToString());
         }
     }
 }

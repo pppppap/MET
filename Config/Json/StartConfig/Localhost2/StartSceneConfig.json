@@ -1,0 +1,14 @@
+{"list":[
+	{"_t":"StartSceneConfig","_id":101,"ID":101,"Process":101,"Zone":1,"SceneType":"Realm","Name":"Realm","OuterPort":30002},
+	{"_t":"StartSceneConfig","_id":102,"ID":102,"Process":102,"Zone":1,"SceneType":"Gate","Name":"Gate1","OuterPort":30003},
+	{"_t":"StartSceneConfig","_id":103,"ID":103,"Process":103,"Zone":1,"SceneType":"Gate","Name":"Gate2","OuterPort":30004},
+	{"_t":"StartSceneConfig","_id":104,"ID":104,"Process":104,"Zone":1,"SceneType":"Location","Name":"Location","OuterPort":0},
+	{"_t":"StartSceneConfig","_id":105,"ID":105,"Process":105,"Zone":1,"SceneType":"Map","Name":"Map1","OuterPort":0},
+	{"_t":"StartSceneConfig","_id":106,"ID":106,"Process":106,"Zone":1,"SceneType":"Map","Name":"Map2","OuterPort":0},
+	{"_t":"StartSceneConfig","_id":201,"ID":201,"Process":201,"Zone":2,"SceneType":"Robot","Name":"Robot01","OuterPort":0},
+	{"_t":"StartSceneConfig","_id":301,"ID":301,"Process":301,"Zone":3,"SceneType":"RouterManager","Name":"RouterManager","OuterPort":30301},
+	{"_t":"StartSceneConfig","_id":302,"ID":302,"Process":302,"Zone":3,"SceneType":"Router","Name":"Router01","OuterPort":30302},
+	{"_t":"StartSceneConfig","_id":303,"ID":303,"Process":303,"Zone":3,"SceneType":"Router","Name":"Router02","OuterPort":30303},
+	{"_t":"StartSceneConfig","_id":304,"ID":304,"Process":304,"Zone":3,"SceneType":"Router","Name":"Router03","OuterPort":30304},
+	{"_t":"StartSceneConfig","_id":305,"ID":305,"Process":305,"Zone":3,"SceneType":"Router","Name":"Router04","OuterPort":30305}
+]}
