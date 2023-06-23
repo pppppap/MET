@@ -16,6 +16,7 @@ namespace ET
 {
     internal class Table
     {
+        public List<string> FilePathList=new ();
         public string TableName;
         public Dictionary<string, FiledInfo> Fields = new();
         public List<TableData> DataList = new();
@@ -219,6 +220,7 @@ namespace ET
 
             Table table = GetTable(tableName);
             table.TableName = tableName;
+            table.FilePathList.Add(filepath);
             foreach (var t in table.DataList)
             {
                 if (t.FileDir == fileDir)
@@ -363,6 +365,16 @@ namespace ET
 
             {
                 StringBuilder sb = new StringBuilder();
+                foreach (string path in table.FilePathList)
+                {
+                    sb.Append($"// {path}\n");
+                }
+
+                content = content.Replace("(ConfigDesc)", sb.ToString().TrimEnd());
+            }
+
+            {
+                StringBuilder sb = new StringBuilder();
                 foreach ((string _, FiledInfo filedInfo) in classField)
                 {
                     sb.Append($"        /// <summary>{filedInfo.FieldDesc}</summary>\n");
@@ -389,6 +401,25 @@ namespace ET
                         sb.Append($"        [BsonIgnore]\n");
                         sb.Append($"        private readonly Dictionary<int, {protoName}> dict = new();\n");
                         sb.Append('\n');
+                    }
+                    else
+                    {
+                        sb.Append($"        [ProtoIgnore]\n");
+                        sb.Append($"        [BsonIgnore]\n");
+                        sb.Append($"        private readonly Dictionary<{filedInfo.FieldType}, {protoName}> dictBy{filedInfo.FieldName} = new();\n");
+                        sb.Append('\n');
+                    }
+                }
+
+                foreach ((string _, FiledInfo filedInfo) in classField)
+                {
+                    if (!filedInfo.IndexKey)
+                    {
+                        continue;
+                    }
+
+                    if (filedInfo.FieldName == "ID")
+                    {
                         sb.Append($"        public {protoName} Get(int id)\n");
                         sb.Append("        {\n");
                         sb.Append($"            this.dict.TryGetValue(id, out {protoName} value);\n");
@@ -398,10 +429,6 @@ namespace ET
                     }
                     else
                     {
-                        sb.Append($"        [ProtoIgnore]\n");
-                        sb.Append($"        [BsonIgnore]\n");
-                        sb.Append($"        private readonly Dictionary<{filedInfo.FieldType}, {protoName}> dictBy{filedInfo.FieldName} = new();\n");
-                        sb.Append('\n');
                         sb.Append($"        public {protoName} GetBy{filedInfo.FieldName}({filedInfo.FieldType} {filedInfo.FieldName.ToLower()})\n");
                         sb.Append("        {\n");
                         sb.Append($"            this.dictBy{filedInfo.FieldName}.TryGetValue({filedInfo.FieldName.ToLower()}, out {protoName} value);\n");

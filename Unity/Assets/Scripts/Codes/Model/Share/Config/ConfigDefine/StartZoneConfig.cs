@@ -1,7 +1,11 @@
-using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
+
+// ../Unity/Assets/Config/Excel/StartConfig\Benchmark\startconfig.xlsx
+// ../Unity/Assets/Config/Excel/StartConfig\Localhost\startconfig.xlsx
+// ../Unity/Assets/Config/Excel/StartConfig\Localhost2\startconfig.xlsx
+// ../Unity/Assets/Config/Excel/StartConfig\Release\startconfig.xlsx
 
 namespace ET
 {

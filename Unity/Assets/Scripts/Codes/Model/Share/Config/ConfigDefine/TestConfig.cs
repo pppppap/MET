@@ -1,7 +1,8 @@
-using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
+
+// ../Unity/Assets/Config/Excel/test.xlsx
 
 namespace ET
 {
@@ -17,15 +18,15 @@ namespace ET
         [BsonIgnore]
         private readonly Dictionary<int, TestConfig> dict = new();
 
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, TestConfig> dictByType = new();
+
         public TestConfig Get(int id)
         {
             this.dict.TryGetValue(id, out TestConfig value);
             return value;
         }
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        private readonly Dictionary<int, TestConfig> dictByType = new();
 
         public TestConfig GetByType(int type)
         {

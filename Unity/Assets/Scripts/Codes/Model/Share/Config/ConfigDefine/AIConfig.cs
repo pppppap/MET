@@ -1,7 +1,8 @@
-using System;
 using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
+
+// ../Unity/Assets/Config/Excel/ai.xlsx
 
 namespace ET
 {
