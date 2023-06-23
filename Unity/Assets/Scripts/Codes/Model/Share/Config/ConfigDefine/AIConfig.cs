@@ -19,7 +19,8 @@ namespace ET
 
         public AIConfig Get(int id)
         {
-            return this.dict[id];
+            this.dict.TryGetValue(id, out AIConfig value);
+            return value;
         }
 
         public void Merge(object o)

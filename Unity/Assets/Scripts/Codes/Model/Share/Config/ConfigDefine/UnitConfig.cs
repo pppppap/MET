@@ -19,7 +19,8 @@ namespace ET
 
         public UnitConfig Get(int id)
         {
-            return this.dict[id];
+            this.dict.TryGetValue(id, out UnitConfig value);
+            return value;
         }
 
         public void Merge(object o)

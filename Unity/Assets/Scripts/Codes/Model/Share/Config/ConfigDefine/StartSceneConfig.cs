@@ -19,7 +19,8 @@ namespace ET
 
         public StartSceneConfig Get(int id)
         {
-            return this.dict[id];
+            this.dict.TryGetValue(id, out StartSceneConfig value);
+            return value;
         }
 
         public void Merge(object o)

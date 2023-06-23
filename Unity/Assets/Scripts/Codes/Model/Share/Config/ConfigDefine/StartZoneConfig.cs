@@ -19,7 +19,8 @@ namespace ET
 
         public StartZoneConfig Get(int id)
         {
-            return this.dict[id];
+            this.dict.TryGetValue(id, out StartZoneConfig value);
+            return value;
         }
 
         public void Merge(object o)

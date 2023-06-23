@@ -574,8 +574,7 @@ namespace ET.Client
 
         public Dictionary<string, string> BundleNameToLowerDict = new Dictionary<string, string>() { { "StreamingAssets", "StreamingAssets" } };
 
-        public readonly Dictionary<string, Dictionary<string, UnityEngine.Object>> resourceCache =
-                new Dictionary<string, Dictionary<string, UnityEngine.Object>>();
+        public readonly Dictionary<string, Dictionary<string, UnityEngine.Object>> resourceCache = new();
 
         public readonly Dictionary<string, ABInfo> bundles = new Dictionary<string, ABInfo>();
         

@@ -19,7 +19,8 @@ namespace ET
 
         public StartMachineConfig Get(int id)
         {
-            return this.dict[id];
+            this.dict.TryGetValue(id, out StartMachineConfig value);
+            return value;
         }
 
         public void Merge(object o)

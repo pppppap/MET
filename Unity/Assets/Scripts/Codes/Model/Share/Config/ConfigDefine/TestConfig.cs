@@ -19,16 +19,18 @@ namespace ET
 
         public TestConfig Get(int id)
         {
-            return this.dict[id];
+            this.dict.TryGetValue(id, out TestConfig value);
+            return value;
         }
 
         [ProtoIgnore]
         [BsonIgnore]
         private readonly Dictionary<int, TestConfig> dictByType = new();
 
-        public TestConfig GetByType(int Type)
+        public TestConfig GetByType(int type)
         {
-            return this.dictByType[Type];
+            this.dictByType.TryGetValue(type, out TestConfig value);
+            return value;
         }
 
         public void Merge(object o)

@@ -391,7 +391,8 @@ namespace ET
                         sb.Append('\n');
                         sb.Append($"        public {protoName} Get(int id)\n");
                         sb.Append("        {\n");
-                        sb.Append($"            return this.dict[id];\n");
+                        sb.Append($"            this.dict.TryGetValue(id, out {protoName} value);\n");
+                        sb.Append("            return value;\n");
                         sb.Append("        }\n");
                         sb.Append('\n');
                     }
@@ -401,9 +402,10 @@ namespace ET
                         sb.Append($"        [BsonIgnore]\n");
                         sb.Append($"        private readonly Dictionary<{filedInfo.FieldType}, {protoName}> dictBy{filedInfo.FieldName} = new();\n");
                         sb.Append('\n');
-                        sb.Append($"        public {protoName} GetBy{filedInfo.FieldName}({filedInfo.FieldType} {filedInfo.FieldName})\n");
+                        sb.Append($"        public {protoName} GetBy{filedInfo.FieldName}({filedInfo.FieldType} {filedInfo.FieldName.ToLower()})\n");
                         sb.Append("        {\n");
-                        sb.Append($"            return this.dictBy{filedInfo.FieldName}[{filedInfo.FieldName}];\n");
+                        sb.Append($"            this.dictBy{filedInfo.FieldName}.TryGetValue({filedInfo.FieldName.ToLower()}, out {protoName} value);\n");
+                        sb.Append("            return value;\n");
                         sb.Append("        }\n");
                         sb.Append('\n');
                     }

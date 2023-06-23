@@ -19,7 +19,8 @@ namespace ET
 
         public StartProcessConfig Get(int id)
         {
-            return this.dict[id];
+            this.dict.TryGetValue(id, out StartProcessConfig value);
+            return value;
         }
 
         public void Merge(object o)
