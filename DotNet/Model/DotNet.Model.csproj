@@ -36,17 +36,6 @@
         <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Share\**\*.cs">
             <Link>Share\%(RecursiveDir)%(FileName)%(Extension)</Link>
         </Compile>
-
-        <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Generate\Server\**\*.cs"> 
-            <Link>Generate\%(RecursiveDir)%(FileName)%(Extension)</Link>
-        </Compile>
-
-        <Compile Remove="..\..\Unity\Assets\Scripts\Codes\Model\Generate\Server\Config\**" />
-
-        <Compile Remove="..\..\Unity\Assets\Scripts\Codes\Model\Generate\Server\ConfigPartial\**" />
-
-        <Compile Remove="..\..\Unity\Assets\Scripts\Codes\Model\Generate\Server\Message\**" />
-        
     </ItemGroup> 
     <ItemGroup> 
         <ProjectReference Include="..\..\Share\Analyzer\Share.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
