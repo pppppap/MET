@@ -14,5 +14,10 @@ namespace ET
         {
             public Unit Unit;
         }
+
+        public struct DayReset
+        {
+            public Unit Unit;
+        }
     }
 }

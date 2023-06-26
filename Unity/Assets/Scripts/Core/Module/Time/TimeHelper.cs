@@ -7,7 +7,7 @@ namespace ET
         public const long OneDay = 86400000;
         public const long Hour = 3600000;
         public const long Minute = 60000;
-        
+
         /// <summary>
         /// 客户端时间
         /// </summary>
@@ -32,14 +32,24 @@ namespace ET
             return TimeInfo.Instance.ServerNow();
         }
 
+        public static DateTime ServerNowDate()
+        {
+            return TimeInfo.Instance.ToDateTime(TimeInfo.Instance.ServerNow());
+        }
+
         public static long ClientFrameTime()
         {
             return TimeInfo.Instance.ClientFrameTime();
         }
-        
+
         public static long ServerFrameTime()
         {
             return TimeInfo.Instance.ServerFrameTime();
+        }
+
+        public static DateTime ToDateTime(long timeStamp)
+        {
+            return TimeInfo.Instance.ToDateTime(timeStamp);
         }
     }
 }

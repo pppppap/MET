@@ -34,7 +34,7 @@ namespace ET
 
         public override void AfterEndInit()
         {
-            foreach (StartSceneConfig startSceneConfig in this.GetAll())
+            foreach (StartSceneConfig startSceneConfig in this.list)
             {
                 this.ProcessScenes.Add(startSceneConfig.Process, startSceneConfig);
                 

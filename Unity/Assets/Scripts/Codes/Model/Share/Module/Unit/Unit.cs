@@ -1,14 +1,17 @@
 ﻿using System.Diagnostics;
+using ET.EventType;
 using MongoDB.Bson.Serialization.Attributes;
 using Unity.Mathematics;
 
 namespace ET
 {
-    [ChildOf(typeof(UnitComponent))]
+    [ChildOf(typeof (UnitComponent))]
     [DebuggerDisplay("ViewName,nq")]
-    public class Unit: Entity, IAwake<int>
+    public class Unit: Entity, IAwake<int>, IUpdate
     {
         public int ConfigId { get; set; } //配置表id
+
+        public long LastOnlineTime { get; set; } // 最后一次在线时间
 
         [BsonIgnore]
         public UnitConfig Config => UnitConfigCategory.Instance.Get(this.ConfigId);
@@ -26,7 +29,7 @@ namespace ET
             {
                 float3 oldPos = this.position;
                 this.position = value;
-                EventSystem.Instance.Publish(this.DomainScene(), new EventType.ChangePosition() { Unit = this, OldPos = oldPos });
+                EventSystem.Instance.Publish(this.DomainScene(), new ChangePosition() { Unit = this, OldPos = oldPos });
             }
         }
 
@@ -36,10 +39,10 @@ namespace ET
             get => math.mul(this.Rotation, math.forward());
             set => this.Rotation = quaternion.LookRotation(value, math.up());
         }
-        
+
         [BsonElement]
         private quaternion rotation;
-        
+
         [BsonIgnore]
         public quaternion Rotation
         {
@@ -47,7 +50,7 @@ namespace ET
             set
             {
                 this.rotation = value;
-                EventSystem.Instance.Publish(this.DomainScene(), new EventType.ChangeRotation() { Unit = this });
+                EventSystem.Instance.Publish(this.DomainScene(), new ChangeRotation() { Unit = this });
             }
         }
 
