@@ -23,6 +23,7 @@ namespace ET.Server
                     );
                     break;
                 case SceneType.RouterManager: // 正式发布请用CDN代替RouterManager
+                    scene.AddComponent<RedisComponent>();
                     // 云服务器在防火墙那里做端口映射
                     scene.AddComponent<HttpComponent, string>($"http://*:{startSceneConfig.OuterPort}/");
                     break;
@@ -30,11 +31,13 @@ namespace ET.Server
                     scene.AddComponent<NetServerComponent, IPEndPoint>(startSceneConfig.InnerIPOutPort);
                     break;
                 case SceneType.Gate:
+                    scene.AddComponent<RedisComponent>();
                     scene.AddComponent<NetServerComponent, IPEndPoint>(startSceneConfig.InnerIPOutPort);
                     scene.AddComponent<PlayerComponent>();
                     scene.AddComponent<GateSessionKeyComponent>();
                     break;
                 case SceneType.Map:
+                    scene.AddComponent<RedisComponent>();
                     scene.AddComponent<UnitComponent>();
                     scene.AddComponent<AOIManagerComponent>();
                     break;
