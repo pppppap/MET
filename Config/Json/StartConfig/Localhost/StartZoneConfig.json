@@ -1,5 +1,5 @@
 {"list":[
-	{"_t":"StartZoneConfig","_id":1,"ID":1,"DBConnection":"mongodb://127.0.0.1","DBName":"ET1"},
-	{"_t":"StartZoneConfig","_id":2,"ID":2,"DBConnection":"","DBName":""},
-	{"_t":"StartZoneConfig","_id":3,"ID":3,"DBConnection":"","DBName":""}
+	{"_t":"StartZoneConfig","_id":1,"ID":1,"DBAddress":"mongodb://127.0.0.1","DBName":"ET1","RedisAddress":"100.64.254.231:6379","RedisDB":4},
+	{"_t":"StartZoneConfig","_id":2,"ID":2,"DBAddress":"","DBName":"","RedisAddress":"","RedisDB":0},
+	{"_t":"StartZoneConfig","_id":3,"ID":3,"DBAddress":"","DBName":"","RedisAddress":"","RedisDB":0}
 ]}

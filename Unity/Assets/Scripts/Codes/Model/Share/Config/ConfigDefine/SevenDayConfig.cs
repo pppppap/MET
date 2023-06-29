@@ -57,6 +57,6 @@ namespace ET
 
         /// <summary>道具</summary>
         [ProtoMember(2)]
-        public int[][] Items { get; set; }
+        public int[] Items { get; set; }
     }
 }

@@ -2,14 +2,17 @@
 
 namespace ET.Server
 {
+    [FriendOf(typeof(RedisComponent))]
     public static class RedisComponentSystem
     {
         [ObjectSystem]
-        public class RedisComponentAwakeSystem: AwakeSystem<RedisComponent>
+        public class RedisComponentAwakeSystem: AwakeSystem<RedisComponent, int>
         {
-            protected override void Awake(RedisComponent self)
+            protected override void Awake(RedisComponent self, int zone)
             {
-                self.Options = ConfigurationOptions.Parse("100.64.254.231:6379");
+                self.Zone = zone;
+                self.RedisDB = self.ZoneConfig.RedisDB;
+                self.Options = ConfigurationOptions.Parse(self.ZoneConfig.RedisAddress);
             }
         }
     }

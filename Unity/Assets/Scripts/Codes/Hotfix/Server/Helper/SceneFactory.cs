@@ -1,11 +1,11 @@
 using System.Net;
-using System.Net.Sockets;
 
 namespace ET.Server
 {
     public static class SceneFactory
     {
-        public static async ETTask<Scene> CreateServerScene(Entity parent, long id, long instanceId, int zone, string name, SceneType sceneType, StartSceneConfig startSceneConfig = null)
+        public static async ETTask<Scene> CreateServerScene(Entity parent, long id, long instanceId, int zone, string name, SceneType sceneType,
+        StartSceneConfig startSceneConfig = null)
         {
             await ETTask.CompletedTask;
             Scene scene = EntitySceneFactory.CreateScene(id, instanceId, zone, sceneType, name, parent);
@@ -19,11 +19,9 @@ namespace ET.Server
                     // startSceneConfig.OuterIPPort改成startSceneConfig.InnerIPOutPort
                     // 然后云服务器防火墙把端口映射过来
                     scene.AddComponent<RouterComponent, IPEndPoint, string>(startSceneConfig.OuterIPPort,
-                        startSceneConfig.StartProcessConfig.InnerIP
-                    );
+                        startSceneConfig.StartProcessConfig.InnerIP);
                     break;
                 case SceneType.RouterManager: // 正式发布请用CDN代替RouterManager
-                    scene.AddComponent<RedisComponent>();
                     // 云服务器在防火墙那里做端口映射
                     scene.AddComponent<HttpComponent, string>($"http://*:{startSceneConfig.OuterPort}/");
                     break;
@@ -31,13 +29,16 @@ namespace ET.Server
                     scene.AddComponent<NetServerComponent, IPEndPoint>(startSceneConfig.InnerIPOutPort);
                     break;
                 case SceneType.Gate:
-                    scene.AddComponent<RedisComponent>();
+                    scene.AddComponent<RedisComponent, int>(startSceneConfig.Zone);
                     scene.AddComponent<NetServerComponent, IPEndPoint>(startSceneConfig.InnerIPOutPort);
                     scene.AddComponent<PlayerComponent>();
                     scene.AddComponent<GateSessionKeyComponent>();
                     break;
                 case SceneType.Map:
-                    scene.AddComponent<RedisComponent>();
+                    if (startSceneConfig != null)
+                    {
+                        scene.AddComponent<RedisComponent, int>(startSceneConfig.Zone);
+                    }
                     scene.AddComponent<UnitComponent>();
                     scene.AddComponent<AOIManagerComponent>();
                     break;

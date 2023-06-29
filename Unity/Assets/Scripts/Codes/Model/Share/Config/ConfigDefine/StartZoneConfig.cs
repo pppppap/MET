@@ -2,10 +2,7 @@ using System.Collections.Generic;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
 
-// ../Unity/Assets/Config/Excel/StartConfig\Benchmark\startconfig.xlsx
 // ../Unity/Assets/Config/Excel/StartConfig\Localhost\startconfig.xlsx
-// ../Unity/Assets/Config/Excel/StartConfig\Localhost2\startconfig.xlsx
-// ../Unity/Assets/Config/Excel/StartConfig\Release\startconfig.xlsx
 
 namespace ET
 {
@@ -60,10 +57,18 @@ namespace ET
 
         /// <summary>数据库地址</summary>
         [ProtoMember(2)]
-        public string DBConnection { get; set; }
+        public string DBAddress { get; set; }
 
         /// <summary>数据库名</summary>
         [ProtoMember(3)]
         public string DBName { get; set; }
+
+        /// <summary>Redis地址</summary>
+        [ProtoMember(4)]
+        public string RedisAddress { get; set; }
+
+        /// <summary>Redis数据库</summary>
+        [ProtoMember(5)]
+        public int RedisDB { get; set; }
     }
 }

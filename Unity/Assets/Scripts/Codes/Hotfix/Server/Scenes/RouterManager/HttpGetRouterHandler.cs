@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
-using StackExchange.Redis;
 
 namespace ET.Server
 {
-    [FriendOf(typeof(RedisComponent))]
     [HttpHandler(SceneType.RouterManager, "/get_router")]
-    public class HttpGetRouterHandler : IHttpHandler
+    public class HttpGetRouterHandler: IHttpHandler
     {
         public async ETTask Handle(Entity domain, HttpListenerContext context)
         {
@@ -19,16 +15,13 @@ namespace ET.Server
             {
                 response.Realms.Add(startSceneConfig.InnerIPOutPort.ToString());
             }
+
             foreach (StartSceneConfig startSceneConfig in StartSceneConfigCategory.Instance.Routers)
             {
                 response.Routers.Add($"{startSceneConfig.StartProcessConfig.OuterIP}:{startSceneConfig.OuterPort}");
             }
-            HttpHelper.Response(context, response);
 
-            RedisComponent redis = domain.DomainScene().GetComponent<RedisComponent>();
-            var conn = ConnectionMultiplexer.Connect(redis.Options);
-            IDatabase database = conn.GetDatabase(3);
-            database.StringSet(new RedisKey("sssss"), new RedisValue("12345"));
+            HttpHelper.Response(context, response);
 
             await ETTask.CompletedTask;
         }
