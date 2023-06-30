@@ -1,8 +1,10 @@
+// @formatter:off
+// ../Unity/Assets/Config/Excel/unit.xlsx
+
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
-
-// ../Unity/Assets/Config/Excel/unit.xlsx
 
 namespace ET
 {
@@ -40,15 +42,11 @@ namespace ET
 
     [ProtoContract]
     [Config]
-    public partial class UnitConfigCategory: ConfigSingleton<UnitConfigCategory>, IMerge
+    public partial class UnitConfigCategory: ConfigSingleton<UnitConfigCategory>
     {
         [BsonElement]
         [ProtoMember(1)]
-        private List<UnitConfig> list = new List<UnitConfig>();
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        public List<UnitConfig> List => this.list;
+        public IList<UnitConfig> List = new List<UnitConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -60,22 +58,18 @@ namespace ET
             return value;
         }
 
-        public void Merge(object o)
-        {
-            UnitConfigCategory s = o as UnitConfigCategory;
-            this.list.AddRange(s.list);
-        }
-
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (var config in list)
+            this.List = new ReadOnlyCollection<UnitConfig>(this.List);
+
+            foreach (var config in List)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }

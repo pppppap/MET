@@ -1,8 +1,10 @@
+// @formatter:off
+// ../Unity/Assets/Config/Excel/StartConfig\Localhost\startconfig.xlsx
+
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
-
-// ../Unity/Assets/Config/Excel/StartConfig\Localhost\startconfig.xlsx
 
 namespace ET
 {
@@ -28,15 +30,11 @@ namespace ET
 
     [ProtoContract]
     [Config]
-    public partial class StartMachineConfigCategory: ConfigSingleton<StartMachineConfigCategory>, IMerge
+    public partial class StartMachineConfigCategory: ConfigSingleton<StartMachineConfigCategory>
     {
         [BsonElement]
         [ProtoMember(1)]
-        private List<StartMachineConfig> list = new List<StartMachineConfig>();
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        public List<StartMachineConfig> List => this.list;
+        public IList<StartMachineConfig> List = new List<StartMachineConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -48,22 +46,18 @@ namespace ET
             return value;
         }
 
-        public void Merge(object o)
-        {
-            StartMachineConfigCategory s = o as StartMachineConfigCategory;
-            this.list.AddRange(s.list);
-        }
-
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (var config in list)
+            this.List = new ReadOnlyCollection<StartMachineConfig>(this.List);
+
+            foreach (var config in List)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }

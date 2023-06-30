@@ -17,7 +17,7 @@ namespace ET
 			return this.AIConfigs[aiConfigId];
 		}
 
-		public override void AfterEndInit()
+		public override void AfterCategoryInit()
 		{
 			foreach (var cfg in this.List)
 			{

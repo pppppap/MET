@@ -7,22 +7,35 @@ namespace ET
     {
         [StaticField]
         private static readonly Dictionary<Type, ISingleton> singletonTypes = new Dictionary<Type, ISingleton>();
+
         [StaticField]
         private static readonly Stack<ISingleton> singletons = new Stack<ISingleton>();
+
         [StaticField]
         private static readonly Queue<ISingleton> updates = new Queue<ISingleton>();
+
         [StaticField]
         private static readonly Queue<ISingleton> lateUpdates = new Queue<ISingleton>();
+
         [StaticField]
         private static readonly Queue<ETTask> frameFinishTask = new Queue<ETTask>();
 
-        public static T AddSingleton<T>() where T: Singleton<T>, new()
+        // 正式环境
+        public static bool IsProduct => Options.Instance.Develop == 0;
+
+        // 开发环境
+        public static bool IsDevelop => Options.Instance.Develop == 1;
+
+        // 压测环境
+        public static bool IsBenchmark => Options.Instance.Develop == 2;
+
+        public static T AddSingleton<T>() where T : Singleton<T>, new()
         {
             T singleton = new T();
             AddSingleton(singleton);
             return singleton;
         }
-        
+
         public static void AddSingleton(ISingleton singleton)
         {
             Type singletonType = singleton.GetType();
@@ -33,19 +46,19 @@ namespace ET
 
             singletonTypes.Add(singletonType, singleton);
             singletons.Push(singleton);
-            
+
             singleton.Register();
 
             if (singleton is ISingletonAwake awake)
             {
                 awake.Awake();
             }
-            
+
             if (singleton is ISingletonUpdate)
             {
                 updates.Enqueue(singleton);
             }
-            
+
             if (singleton is ISingletonLateUpdate)
             {
                 lateUpdates.Enqueue(singleton);
@@ -75,7 +88,7 @@ namespace ET
                 {
                     continue;
                 }
-                
+
                 updates.Enqueue(singleton);
                 try
                 {
@@ -87,14 +100,14 @@ namespace ET
                 }
             }
         }
-        
+
         public static void LateUpdate()
         {
             int count = lateUpdates.Count;
             while (count-- > 0)
             {
                 ISingleton singleton = lateUpdates.Dequeue();
-                
+
                 if (singleton.IsDisposed())
                 {
                     continue;
@@ -104,7 +117,7 @@ namespace ET
                 {
                     continue;
                 }
-                
+
                 lateUpdates.Enqueue(singleton);
                 try
                 {
@@ -134,6 +147,7 @@ namespace ET
                 ISingleton iSingleton = singletons.Pop();
                 iSingleton.Destroy();
             }
+
             singletonTypes.Clear();
         }
     }

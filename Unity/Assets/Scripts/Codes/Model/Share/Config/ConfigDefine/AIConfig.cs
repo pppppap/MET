@@ -1,8 +1,10 @@
+// @formatter:off
+// ../Unity/Assets/Config/Excel/ai.xlsx
+
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
-
-// ../Unity/Assets/Config/Excel/ai.xlsx
 
 namespace ET
 {
@@ -36,15 +38,11 @@ namespace ET
 
     [ProtoContract]
     [Config]
-    public partial class AIConfigCategory: ConfigSingleton<AIConfigCategory>, IMerge
+    public partial class AIConfigCategory: ConfigSingleton<AIConfigCategory>
     {
         [BsonElement]
         [ProtoMember(1)]
-        private List<AIConfig> list = new List<AIConfig>();
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        public List<AIConfig> List => this.list;
+        public IList<AIConfig> List = new List<AIConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -56,22 +54,18 @@ namespace ET
             return value;
         }
 
-        public void Merge(object o)
-        {
-            AIConfigCategory s = o as AIConfigCategory;
-            this.list.AddRange(s.list);
-        }
-
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (var config in list)
+            this.List = new ReadOnlyCollection<AIConfig>(this.List);
+
+            foreach (var config in List)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }

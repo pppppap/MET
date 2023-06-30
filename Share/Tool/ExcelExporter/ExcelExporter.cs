@@ -538,7 +538,7 @@ namespace ET
 
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append("            foreach (var config in list)\n");
+                sb.Append("            foreach (var config in List)\n");
                 sb.Append("            {\n");
                 sb.Append("                config.AfterEndInit();\n");
                 foreach ((string _, FiledInfo filedInfo) in classField)
@@ -617,7 +617,7 @@ namespace ET
         {
             string relativeDir = Path.GetRelativePath(excelDir, Path.GetDirectoryName(tableData.FilePath));
             StringBuilder sb = new StringBuilder();
-            sb.Append("{\"list\":[\n");
+            sb.Append("{\"List\":[\n");
 
             int i = 0;
             foreach (var oneData in tableData.Data)
@@ -665,7 +665,6 @@ namespace ET
                 case "int[]":
                 case "int32[]":
                 case "long[]":
-                    return $"[{value}]";
                 case "string[]":
                 case "int[][]":
                     return $"[{value}]";
@@ -710,25 +709,11 @@ namespace ET
             Serializer.NonGeneric.PrepareSerializer(type);
             Serializer.NonGeneric.PrepareSerializer(subType);
 
-            IMerge final = Activator.CreateInstance(type) as IMerge;
+            string json = File.ReadAllText($"../Config/Json/{relativeDir}/{tableName}.json");
+            object deserialize = BsonSerializer.Deserialize(json, type);
 
-            string p = $"../Config/Json/{relativeDir}";
-            string[] ss = Directory.GetFiles(p, $"{tableName}*.json");
-            List<string> jsonPaths = ss.ToList();
-
-            jsonPaths.Sort();
-            jsonPaths.Reverse();
-            foreach (string jsonPath in jsonPaths)
-            {
-                string json = File.ReadAllText(jsonPath);
-                object deserialize = BsonSerializer.Deserialize(json, type);
-                final.Merge(deserialize);
-            }
-
-            string path = Path.Combine(dir, $"{tableName}Category.bytes");
-
-            using FileStream file = File.Create(path);
-            Serializer.Serialize(file, final);
+            using FileStream file = File.Create(Path.Combine(dir, $"{tableName}Category.bytes"));
+            Serializer.Serialize(file, deserialize);
         }
     }
 }

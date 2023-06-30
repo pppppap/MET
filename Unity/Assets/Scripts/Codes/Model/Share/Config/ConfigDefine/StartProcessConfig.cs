@@ -1,8 +1,10 @@
+// @formatter:off
+// ../Unity/Assets/Config/Excel/StartConfig\Localhost\startconfig.xlsx
+
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
-
-// ../Unity/Assets/Config/Excel/StartConfig\Localhost\startconfig.xlsx
 
 namespace ET
 {
@@ -24,15 +26,11 @@ namespace ET
 
     [ProtoContract]
     [Config]
-    public partial class StartProcessConfigCategory: ConfigSingleton<StartProcessConfigCategory>, IMerge
+    public partial class StartProcessConfigCategory: ConfigSingleton<StartProcessConfigCategory>
     {
         [BsonElement]
         [ProtoMember(1)]
-        private List<StartProcessConfig> list = new List<StartProcessConfig>();
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        public List<StartProcessConfig> List => this.list;
+        public IList<StartProcessConfig> List = new List<StartProcessConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -44,22 +42,18 @@ namespace ET
             return value;
         }
 
-        public void Merge(object o)
-        {
-            StartProcessConfigCategory s = o as StartProcessConfigCategory;
-            this.list.AddRange(s.list);
-        }
-
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (var config in list)
+            this.List = new ReadOnlyCollection<StartProcessConfig>(this.List);
+
+            foreach (var config in List)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }

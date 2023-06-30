@@ -1,8 +1,10 @@
+// @formatter:off
+// ../Unity/Assets/Config/Excel/kv.xlsx
+
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
-
-// ../Unity/Assets/Config/Excel/kv.xlsx
 
 namespace ET
 {
@@ -27,27 +29,23 @@ namespace ET
 
     [ProtoContract]
     [Config]
-    public partial class KVCommonCategory: ConfigSingleton<KVCommonCategory>, IMerge
+    public partial class KVCommonCategory: ConfigSingleton<KVCommonCategory>
     {
         [BsonElement]
         [ProtoMember(1)]
-        private List<KVCommon> list = new List<KVCommon>();
+        public IList<KVCommon> List = new List<KVCommon>();
 
         public KVCommon Get()
         {
-            return list[0];
-        }
-
-        public void Merge(object o)
-        {
-            KVCommonCategory s = o as KVCommonCategory;
-            this.list.AddRange(s.list);
+            return List[0];
         }
 
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (var config in list)
+            this.List = new ReadOnlyCollection<KVCommon>(this.List);
+
+            foreach (var config in List)
             {
                 config.AfterEndInit();
             }

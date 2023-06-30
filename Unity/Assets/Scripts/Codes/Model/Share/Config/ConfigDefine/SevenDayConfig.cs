@@ -1,8 +1,10 @@
+// @formatter:off
+// ../Unity/Assets/Config/Excel/sevenday.xlsx
+
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
-
-// ../Unity/Assets/Config/Excel/sevenday.xlsx
 
 namespace ET
 {
@@ -20,15 +22,11 @@ namespace ET
 
     [ProtoContract]
     [Config]
-    public partial class SevenDayConfigCategory: ConfigSingleton<SevenDayConfigCategory>, IMerge
+    public partial class SevenDayConfigCategory: ConfigSingleton<SevenDayConfigCategory>
     {
         [BsonElement]
         [ProtoMember(1)]
-        private List<SevenDayConfig> list = new List<SevenDayConfig>();
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        public List<SevenDayConfig> List => this.list;
+        public IList<SevenDayConfig> List = new List<SevenDayConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -40,22 +38,18 @@ namespace ET
             return value;
         }
 
-        public void Merge(object o)
-        {
-            SevenDayConfigCategory s = o as SevenDayConfigCategory;
-            this.list.AddRange(s.list);
-        }
-
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
-            foreach (var config in list)
+            this.List = new ReadOnlyCollection<SevenDayConfig>(this.List);
+
+            foreach (var config in List)
             {
                 config.AfterEndInit();
                 this.dict.Add(config.ID, config);
             }
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }

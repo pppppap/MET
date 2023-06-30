@@ -1,8 +1,10 @@
+// @formatter:off
+(ConfigDesc)
+
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
-
-(ConfigDesc)
 
 namespace ET
 {
@@ -14,30 +16,22 @@ namespace ET
 
     [ProtoContract]
     [Config]
-    public partial class (ConfigName)Category: ConfigSingleton<(ConfigName)Category>, IMerge
+    public partial class (ConfigName)Category: ConfigSingleton<(ConfigName)Category>
     {
         [BsonElement]
         [ProtoMember(1)]
-        private List<(ConfigName)> list = new List<(ConfigName)>();
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        public List<(ConfigName)> List => this.list;
+        public IList<(ConfigName)> List = new List<(ConfigName)>();
 
 (DictOp)
-
-        public void Merge(object o)
-        {
-            (ConfigName)Category s = o as (ConfigName)Category;
-            this.list.AddRange(s.list);
-        }
 
         [ProtoAfterDeserialization]
         public void ProtoEndInit()
         {
+            this.List = new ReadOnlyCollection<(ConfigName)>(this.List);
+
 (DictInit)
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }

@@ -4,9 +4,9 @@ namespace ET
     {
         public int MaxDay;
 
-        public override void AfterEndInit()
+        public override void AfterCategoryInit()
         {
-            foreach (SevenDayConfig sevenDayConfig in this.list)
+            foreach (SevenDayConfig sevenDayConfig in this.List)
             {
                 if (this.MaxDay < sevenDayConfig.ID)
                 {

@@ -32,9 +32,9 @@ namespace ET
             return this.ClientScenesByName[zone][name];
         }
 
-        public override void AfterEndInit()
+        public override void AfterCategoryInit()
         {
-            foreach (StartSceneConfig startSceneConfig in this.list)
+            foreach (StartSceneConfig startSceneConfig in this.List)
             {
                 this.ProcessScenes.Add(startSceneConfig.Process, startSceneConfig);
                 

@@ -2,7 +2,7 @@
 
 namespace ET
 {
-    public abstract class ConfigSingleton<T>: ProtoObject, ISingleton where T: ConfigSingleton<T>, new()
+    public abstract class ConfigSingleton<T>: ProtoObject, ICategoryInit, ISingleton where T : ConfigSingleton<T>, new()
     {
         [StaticField]
         private static T instance;
@@ -21,6 +21,7 @@ namespace ET
             {
                 throw new Exception($"singleton register twice! {typeof (T).Name}");
             }
+
             instance = (T)this;
         }
 
@@ -36,11 +37,19 @@ namespace ET
             throw new NotImplementedException();
         }
 
-        public override void AfterEndInit()
+        public sealed override void AfterEndInit()
         {
         }
 
         public virtual void Dispose()
+        {
+        }
+
+        public virtual void AfterCategoryInit()
+        {
+        }
+
+        public virtual void CategoryInit(ICategoryInit category)
         {
         }
     }

@@ -36,7 +36,16 @@
             
             Game.AddSingleton<NetServices>();
             Game.AddSingleton<Root>();
-            Game.AddSingleton<ConfigComponent>();
+
+            if (Game.IsDevelop)
+            {
+                // 开发模式下启动加载全部配置表, 用来检测配置表是否有报错
+               await Game.AddSingleton<ConfigComponent>().LoadAsync();
+            }
+            else
+            {
+                Game.AddSingleton<ConfigComponent>();
+            }
 
             await EventSystem.Instance.PublishAsync(Root.Instance.Scene, new EventType.EntryEvent1());
             await EventSystem.Instance.PublishAsync(Root.Instance.Scene, new EventType.EntryEvent2());
