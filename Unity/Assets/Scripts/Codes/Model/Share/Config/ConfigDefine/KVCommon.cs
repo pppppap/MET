@@ -33,7 +33,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<KVCommon> List = new List<KVCommon>();
+        public IList<KVCommon> List { get; private set; } = new List<KVCommon>();
 
         public KVCommon Get()
         {
@@ -50,7 +50,7 @@ namespace ET
                 config.AfterEndInit();
             }
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }

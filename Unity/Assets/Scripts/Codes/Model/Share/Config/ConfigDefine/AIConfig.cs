@@ -42,7 +42,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<AIConfig> List = new List<AIConfig>();
+        public IList<AIConfig> List { get; private set; } = new List<AIConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]

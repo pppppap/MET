@@ -30,7 +30,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<StartProcessConfig> List = new List<StartProcessConfig>();
+        public IList<StartProcessConfig> List { get; private set; } = new List<StartProcessConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]

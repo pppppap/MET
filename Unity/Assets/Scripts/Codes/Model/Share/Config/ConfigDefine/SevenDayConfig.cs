@@ -26,7 +26,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<SevenDayConfig> List = new List<SevenDayConfig>();
+        public IList<SevenDayConfig> List { get; private set; } = new List<SevenDayConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]

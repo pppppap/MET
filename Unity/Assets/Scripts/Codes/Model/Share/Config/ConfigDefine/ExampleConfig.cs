@@ -22,7 +22,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<ExampleConfig> List = new List<ExampleConfig>();
+        public IList<ExampleConfig> List { get; private set; } = new List<ExampleConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]

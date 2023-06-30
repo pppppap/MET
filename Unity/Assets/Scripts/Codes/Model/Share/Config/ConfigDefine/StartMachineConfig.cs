@@ -34,7 +34,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<StartMachineConfig> List = new List<StartMachineConfig>();
+        public IList<StartMachineConfig> List { get; private set; } = new List<StartMachineConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]

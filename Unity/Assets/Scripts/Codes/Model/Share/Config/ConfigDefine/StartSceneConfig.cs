@@ -42,7 +42,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<StartSceneConfig> List = new List<StartSceneConfig>();
+        public IList<StartSceneConfig> List { get; private set; } = new List<StartSceneConfig>();
 
         [ProtoIgnore]
         [BsonIgnore]

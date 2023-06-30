@@ -23,7 +23,7 @@ namespace ET
     {
         [BsonElement]
         [ProtoMember(1)]
-        public IList<(ConfigName)> List = new List<(ConfigName)>();
+        public IList<(ConfigName)> List { get; private set; } = new List<(ConfigName)>();
 
         public (ConfigName) Get()
         {
@@ -40,7 +40,7 @@ namespace ET
                 config.AfterEndInit();
             }
 
-            this.AfterEndInit();
+            this.AfterCategoryInit();
         }
     }
 }
