@@ -2,7 +2,7 @@
 
 namespace ET
 {
-    public abstract class ConfigSingleton<T>: ProtoObject, ICategoryInit, ISingleton where T : ConfigSingleton<T>, new()
+    public abstract class ConfigSingleton<T>: ProtoObject, ISingleton where T : ConfigSingleton<T>, new()
     {
         [StaticField]
         private static T instance;
@@ -46,10 +46,6 @@ namespace ET
         }
 
         public virtual void AfterCategoryInit()
-        {
-        }
-
-        public virtual void CategoryInit(ICategoryInit category)
         {
         }
     }
