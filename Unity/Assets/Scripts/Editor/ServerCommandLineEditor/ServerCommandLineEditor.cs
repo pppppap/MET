@@ -21,7 +21,7 @@ namespace ET
             GetWindow<ServerCommandLineEditor>(DockDefine.Types);
         }
         
-        private int selectStartConfigIndex = 1;
+        private int selectStartConfigIndex = 0;
         private string[] startConfigs;
         private string startConfig;
         private DevelopMode developMode;
@@ -34,6 +34,12 @@ namespace ET
 
         public void OnGUI()
         {
+            if (Logger.Instance == null)
+            {
+                Game.AddSingleton<Options>().Console = 1;
+                Game.AddSingleton<Logger>().ILog = new UnityLogger();
+            }
+
             selectStartConfigIndex = EditorGUILayout.Popup(selectStartConfigIndex, this.startConfigs);
             this.startConfig = this.startConfigs[this.selectStartConfigIndex];
             this.developMode = (DevelopMode) EditorGUILayout.EnumPopup("起服模式：", this.developMode);

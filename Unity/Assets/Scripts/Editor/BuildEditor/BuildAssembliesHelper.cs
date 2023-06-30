@@ -30,9 +30,7 @@ namespace ET
                 case CodeMode.Server:
                     codes = new List<string>()
                     {
-                        "Assets/Scripts/Codes/Model/Share/",
-                        "Assets/Scripts/Codes/Model/Server/",
-                        "Assets/Scripts/Codes/Model/Client/",
+                        "Assets/Scripts/Codes/Model/Share/", "Assets/Scripts/Codes/Model/Server/", "Assets/Scripts/Codes/Model/Client/",
                     };
                     break;
                 case CodeMode.ClientServer:
@@ -80,7 +78,9 @@ namespace ET
                 case CodeMode.Server:
                     codes = new List<string>()
                     {
-                        "Assets/Scripts/Codes/Hotfix/Share/", "Assets/Scripts/Codes/Hotfix/Server/", "Assets/Scripts/Codes/Hotfix/Client/",
+                        "Assets/Scripts/Codes/Hotfix/Share/",
+                        "Assets/Scripts/Codes/Hotfix/Server/",
+                        "Assets/Scripts/Codes/Hotfix/Client/",
                     };
                     break;
                 case CodeMode.ClientServer:
@@ -139,15 +139,24 @@ namespace ET
             {
                 assemblyBuilder.excludeReferences = new string[]
                 {
-                    "DnsClient.dll", 
-                    "MongoDB.Driver.Core.dll", 
-                    "MongoDB.Driver.dll", 
+                    "DnsClient.dll",
+                    "MongoDB.Driver.Core.dll",
+                    "MongoDB.Driver.dll",
                     "MongoDB.Driver.Legacy.dll",
-                    "MongoDB.Libmongocrypt.dll", 
-                    "SharpCompress.dll", 
-                    "System.Buffers.dll", 
+                    "MongoDB.Libmongocrypt.dll",
+                    "SharpCompress.dll",
+                    "System.Buffers.dll",
                     "System.Runtime.CompilerServices.Unsafe.dll",
-                    "System.Text.Encoding.CodePages.dll"
+                    "System.Text.Encoding.CodePages.dll",
+                    "Microsoft.Bcl.AsyncInterfaces.dll",
+                    "Pipelines.Sockets.Unofficial.dll",
+                    "StackExchange.Redis.dll",
+                    "System.Buffers.dll",
+                    "System.IO.Pipelines.dll",
+                    "System.Memory.dll",
+                    "System.Numerics.Vectors.dll",
+                    "System.Threading.Channels.dll",
+                    "System.Threading.Tasks.Extensions.dll",
                 };
             }
 
