@@ -29,7 +29,7 @@ namespace ET
 
         public override void AfterEndInit()
         {
-            InstanceIdStruct instanceIdStruct = new InstanceIdStruct((int)this.ID, 0);
+            InstanceIdStruct instanceIdStruct = new InstanceIdStruct(this.ID, 0);
             this.SceneId = instanceIdStruct.ToLong();
             Log.Info($"StartProcess info: {this.MachineId} {this.ID} {this.SceneId}");
         }

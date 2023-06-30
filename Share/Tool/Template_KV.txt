@@ -1,0 +1,48 @@
+using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
+using ProtoBuf;
+
+(ConfigDesc)
+
+namespace ET
+{
+    [ProtoContract]
+    public partial class (ConfigName): ProtoObject, IConfig
+    {
+        [ProtoMember(1)]
+        public int ID { get; set; }
+
+(Fields)
+    }
+
+    [ProtoContract]
+    [Config]
+    public partial class (ConfigName)Category: ConfigSingleton<(ConfigName)Category>, IMerge
+    {
+        [BsonElement]
+        [ProtoMember(1)]
+        private List<(ConfigName)> list = new List<(ConfigName)>();
+
+        public (ConfigName) Get()
+        {
+            return list[0];
+        }
+
+        public void Merge(object o)
+        {
+            (ConfigName)Category s = o as (ConfigName)Category;
+            this.list.AddRange(s.list);
+        }
+
+        [ProtoAfterDeserialization]
+        public void ProtoEndInit()
+        {
+            foreach (var config in list)
+            {
+                config.AfterEndInit();
+            }
+
+            this.AfterEndInit();
+        }
+    }
+}
