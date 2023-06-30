@@ -1,4 +1,4 @@
-{"list":[
+{"List":[
 	{"_t":"StartSceneConfig","_id":1,"ID":1,"Process":1,"Zone":1,"SceneType":"Realm","Name":"Realm","OuterPort":30002},
 	{"_t":"StartSceneConfig","_id":2,"ID":2,"Process":1,"Zone":1,"SceneType":"Gate","Name":"Gate1","OuterPort":30003},
 	{"_t":"StartSceneConfig","_id":3,"ID":3,"Process":1,"Zone":1,"SceneType":"Gate","Name":"Gate2","OuterPort":30004},

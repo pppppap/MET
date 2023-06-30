@@ -1,4 +1,4 @@
-{"list":[
+{"List":[
 	{"_t":"SevenDayConfig","_id":1,"ID":1,"Items":[1001,20]},
 	{"_t":"SevenDayConfig","_id":2,"ID":2,"Items":[1001,20]},
 	{"_t":"SevenDayConfig","_id":3,"ID":3,"Items":[1001,20]},
