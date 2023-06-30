@@ -7,12 +7,28 @@ using ProtoBuf;
 namespace ET
 {
     [ProtoContract]
+    public partial class SevenDayConfig: ProtoObject, IConfig
+    {
+        /// <summary>唯一id</summary>
+        [ProtoMember(1)]
+        public int ID { get; set; }
+
+        /// <summary>道具</summary>
+        [ProtoMember(2)]
+        public int[] Items { get; set; }
+    }
+
+    [ProtoContract]
     [Config]
     public partial class SevenDayConfigCategory: ConfigSingleton<SevenDayConfigCategory>, IMerge
     {
         [BsonElement]
         [ProtoMember(1)]
         private List<SevenDayConfig> list = new List<SevenDayConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        public List<SevenDayConfig> List => this.list;
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -41,22 +57,5 @@ namespace ET
 
             this.AfterEndInit();
         }
-
-        public List<SevenDayConfig> GetAll()
-        {
-            return this.list;
-        }
-    }
-
-    [ProtoContract]
-    public partial class SevenDayConfig: ProtoObject, IConfig
-    {
-        /// <summary>唯一id</summary>
-        [ProtoMember(1)]
-        public int ID { get; set; }
-
-        /// <summary>道具</summary>
-        [ProtoMember(2)]
-        public int[] Items { get; set; }
     }
 }

@@ -7,7 +7,6 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using Microsoft.Extensions.Primitives;
 using MongoDB.Bson.Serialization;
 using OfficeOpenXml;
 using ProtoBuf;
@@ -16,10 +15,11 @@ namespace ET
 {
     internal class Table
     {
-        public List<string> FilePathList=new ();
+        public List<string> FilePathList = new();
         public string TableName;
         public Dictionary<string, FiledInfo> Fields = new();
         public List<TableData> DataList = new();
+        public bool isKV;
     }
 
     internal struct FiledInfo
@@ -43,6 +43,7 @@ namespace ET
     public static class ExcelExporter
     {
         private static string template;
+        private static string template_kv;
 
         private const string ClassDir = "../Unity/Assets/Scripts/Codes/Model/Share/Config/ConfigDefine";
 
@@ -84,6 +85,7 @@ namespace ET
                 _ = WireType.Fixed64.ToString();
 
                 template = File.ReadAllText("Template.txt");
+                template_kv = File.ReadAllText("Template_KV.txt");
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 List<string> files = FileHelper.GetAllFiles(excelDir);
@@ -209,11 +211,18 @@ namespace ET
 
         static void ExportSheetClass(ExcelWorksheet worksheet, string filepath)
         {
-            if (!worksheet.Name.StartsWith("@"))
+            if (worksheet.Name.StartsWith("@kv_"))
             {
-                return;
+                doExportKVConfig(worksheet, filepath);
             }
+            else if (worksheet.Name.StartsWith("@"))
+            {
+                doExportCommonConfig(worksheet, filepath);
+            }
+        }
 
+        static void doExportCommonConfig(ExcelWorksheet worksheet, string filepath)
+        {
             var fileName = Path.GetFileName(filepath);
             var fileDir = Path.GetDirectoryName(filepath);
             var tableName = worksheet.Name.Substring(1, worksheet.Name.Length - 1) + "Config";
@@ -345,7 +354,92 @@ namespace ET
             }
         }
 
+        static void doExportKVConfig(ExcelWorksheet worksheet, string filepath)
+        {
+            var fileName = Path.GetFileName(filepath);
+            var fileDir = Path.GetDirectoryName(filepath);
+            var tableName = "KV" + worksheet.Name.Substring(4, worksheet.Name.Length - 4);
+
+            Table table = GetTable(tableName);
+            table.TableName = tableName;
+            table.FilePathList.Add(filepath);
+            table.isKV = true;
+
+            if (table.DataList.Count > 0)
+            {
+                throw new Exception($"{filepath}表{tableName}重复");
+            }
+
+            TableData tableData = new();
+            table.DataList.Add(tableData);
+            tableData.FileDir = fileDir;
+            tableData.FilePath = filepath;
+
+            const int IgnoreCol = 1; // 忽略标记列
+            const int FieldNameCol = 2; // 字段名列
+            const int FieldTypeCol = 3; // 字段类型列
+            const int ValueCol = 4; // 值列
+            const int FieldDescCol = 5; // 字段描述列
+
+            List<(string, string)> data = new();
+
+            var filedIndex = 2;
+            for (int row = 2; row <= worksheet.Dimension.End.Row; ++row)
+            {
+                string ignoreFlag = worksheet.Cells[row, IgnoreCol].Text.Trim().ToLower();
+                if (ignoreFlag.Length > 0)
+                {
+                    if (ignoreFlag == "#")
+                    {
+                        // 忽略列
+                        continue;
+                    }
+
+                    throw new Exception($"{filepath}表{tableName}第{row}行忽略标记配置错误");
+                }
+
+                string fieldName = worksheet.Cells[row, FieldNameCol].Text.Trim();
+                if (fieldName == "")
+                {
+                    throw new Exception($"{filepath}表{tableName}第{row}行字段名配置错误");
+                }
+
+                string fieldDesc = worksheet.Cells[row, FieldDescCol].Text.Trim();
+                string fieldType = worksheet.Cells[row, FieldTypeCol].Text.Trim();
+
+                if (table.Fields.ContainsKey(fieldName))
+                {
+                    throw new Exception($"{fileName}表{tableName}字段{fieldName}重复");
+                }
+
+                table.Fields[fieldName] = new FiledInfo
+                {
+                    FieldName = fieldName,
+                    FilePath = filepath,
+                    FieldDesc = fieldDesc,
+                    FieldType = fieldType,
+                    FieldIndex = filedIndex++,
+                };
+
+                data.Add((fieldName, Convert(fieldType, worksheet.Cells[row, ValueCol].Text.Trim())));
+            }
+
+            tableData.Data.Add(data);
+        }
+
         static void ExportClass(Table table)
+        {
+            if (table.isKV)
+            {
+                doExportKVClass(table);
+            }
+            else
+            {
+                doExportCommonClass(table);
+            }
+        }
+
+        static void doExportCommonClass(Table table)
         {
             string protoName = table.TableName;
             Dictionary<string, FiledInfo> classField = table.Fields;
@@ -431,7 +525,8 @@ namespace ET
                     {
                         sb.Append($"        public {protoName} GetBy{filedInfo.FieldName}({filedInfo.FieldType} {filedInfo.FieldName.ToLower()})\n");
                         sb.Append("        {\n");
-                        sb.Append($"            this.dictBy{filedInfo.FieldName}.TryGetValue({filedInfo.FieldName.ToLower()}, out {protoName} value);\n");
+                        sb.Append(
+                            $"            this.dictBy{filedInfo.FieldName}.TryGetValue({filedInfo.FieldName.ToLower()}, out {protoName} value);\n");
                         sb.Append("            return value;\n");
                         sb.Append("        }\n");
                         sb.Append('\n');
@@ -462,9 +557,53 @@ namespace ET
                         sb.Append($"                this.dictBy{filedInfo.FieldName}.Add(config.{filedInfo.FieldName}, config);\n");
                     }
                 }
+
                 sb.Append("            }\n");
 
                 content = content.Replace("(DictInit)", sb.ToString().TrimEnd());
+            }
+
+            sw.Write(content);
+        }
+
+        static void doExportKVClass(Table table)
+        {
+            string protoName = table.TableName;
+            Dictionary<string, FiledInfo> classField = table.Fields;
+
+            string dir = ClassDir;
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            string exportPath = Path.Combine(dir, $"{protoName}.cs");
+
+            using FileStream txt = new FileStream(exportPath, FileMode.Create);
+            using StreamWriter sw = new StreamWriter(txt);
+
+            string content = template_kv.Replace("(ConfigName)", protoName);
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (string path in table.FilePathList)
+                {
+                    sb.Append($"// {path}\n");
+                }
+
+                content = content.Replace("(ConfigDesc)", sb.ToString().TrimEnd());
+            }
+
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach ((string _, FiledInfo filedInfo) in classField)
+                {
+                    sb.Append($"        /// <summary>{filedInfo.FieldDesc}</summary>\n");
+                    sb.Append($"        [ProtoMember({filedInfo.FieldIndex})]\n");
+                    sb.Append($"        public {filedInfo.FieldType} {filedInfo.FieldName} {{ get; set; }}\n");
+                    sb.Append('\n');
+                }
+
+                content = content.Replace("(Fields)", sb.ToString().TrimEnd());
             }
 
             sw.Write(content);

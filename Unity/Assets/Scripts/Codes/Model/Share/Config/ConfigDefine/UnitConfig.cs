@@ -7,48 +7,6 @@ using ProtoBuf;
 namespace ET
 {
     [ProtoContract]
-    [Config]
-    public partial class UnitConfigCategory: ConfigSingleton<UnitConfigCategory>, IMerge
-    {
-        [BsonElement]
-        [ProtoMember(1)]
-        private List<UnitConfig> list = new List<UnitConfig>();
-
-        [ProtoIgnore]
-        [BsonIgnore]
-        private readonly Dictionary<int, UnitConfig> dict = new();
-
-        public UnitConfig Get(int id)
-        {
-            this.dict.TryGetValue(id, out UnitConfig value);
-            return value;
-        }
-
-        public void Merge(object o)
-        {
-            UnitConfigCategory s = o as UnitConfigCategory;
-            this.list.AddRange(s.list);
-        }
-
-        [ProtoAfterDeserialization]
-        public void ProtoEndInit()
-        {
-            foreach (var config in list)
-            {
-                config.AfterEndInit();
-                this.dict.Add(config.ID, config);
-            }
-
-            this.AfterEndInit();
-        }
-
-        public List<UnitConfig> GetAll()
-        {
-            return this.list;
-        }
-    }
-
-    [ProtoContract]
     public partial class UnitConfig: ProtoObject, IConfig
     {
         /// <summary>ID</summary>
@@ -78,5 +36,46 @@ namespace ET
         /// <summary>体重</summary>
         [ProtoMember(7)]
         public int Weight { get; set; }
+    }
+
+    [ProtoContract]
+    [Config]
+    public partial class UnitConfigCategory: ConfigSingleton<UnitConfigCategory>, IMerge
+    {
+        [BsonElement]
+        [ProtoMember(1)]
+        private List<UnitConfig> list = new List<UnitConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        public List<UnitConfig> List => this.list;
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        private readonly Dictionary<int, UnitConfig> dict = new();
+
+        public UnitConfig Get(int id)
+        {
+            this.dict.TryGetValue(id, out UnitConfig value);
+            return value;
+        }
+
+        public void Merge(object o)
+        {
+            UnitConfigCategory s = o as UnitConfigCategory;
+            this.list.AddRange(s.list);
+        }
+
+        [ProtoAfterDeserialization]
+        public void ProtoEndInit()
+        {
+            foreach (var config in list)
+            {
+                config.AfterEndInit();
+                this.dict.Add(config.ID, config);
+            }
+
+            this.AfterEndInit();
+        }
     }
 }

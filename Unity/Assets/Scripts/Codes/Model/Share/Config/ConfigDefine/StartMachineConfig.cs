@@ -7,12 +7,36 @@ using ProtoBuf;
 namespace ET
 {
     [ProtoContract]
+    public partial class StartMachineConfig: ProtoObject, IConfig
+    {
+        /// <summary>ID</summary>
+        [ProtoMember(1)]
+        public int ID { get; set; }
+
+        /// <summary>内网地址</summary>
+        [ProtoMember(2)]
+        public string InnerIP { get; set; }
+
+        /// <summary>外网地址</summary>
+        [ProtoMember(3)]
+        public string OuterIP { get; set; }
+
+        /// <summary>守护进程端口</summary>
+        [ProtoMember(4)]
+        public string WatcherPort { get; set; }
+    }
+
+    [ProtoContract]
     [Config]
     public partial class StartMachineConfigCategory: ConfigSingleton<StartMachineConfigCategory>, IMerge
     {
         [BsonElement]
         [ProtoMember(1)]
         private List<StartMachineConfig> list = new List<StartMachineConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        public List<StartMachineConfig> List => this.list;
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -41,30 +65,5 @@ namespace ET
 
             this.AfterEndInit();
         }
-
-        public List<StartMachineConfig> GetAll()
-        {
-            return this.list;
-        }
-    }
-
-    [ProtoContract]
-    public partial class StartMachineConfig: ProtoObject, IConfig
-    {
-        /// <summary>ID</summary>
-        [ProtoMember(1)]
-        public int ID { get; set; }
-
-        /// <summary>内网地址</summary>
-        [ProtoMember(2)]
-        public string InnerIP { get; set; }
-
-        /// <summary>外网地址</summary>
-        [ProtoMember(3)]
-        public string OuterIP { get; set; }
-
-        /// <summary>守护进程端口</summary>
-        [ProtoMember(4)]
-        public string WatcherPort { get; set; }
     }
 }

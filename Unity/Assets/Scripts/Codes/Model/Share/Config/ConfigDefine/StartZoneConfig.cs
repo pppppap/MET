@@ -7,12 +7,40 @@ using ProtoBuf;
 namespace ET
 {
     [ProtoContract]
+    public partial class StartZoneConfig: ProtoObject, IConfig
+    {
+        /// <summary>ID</summary>
+        [ProtoMember(1)]
+        public int ID { get; set; }
+
+        /// <summary>数据库地址</summary>
+        [ProtoMember(2)]
+        public string DBAddress { get; set; }
+
+        /// <summary>数据库名</summary>
+        [ProtoMember(3)]
+        public string DBName { get; set; }
+
+        /// <summary>Redis地址</summary>
+        [ProtoMember(4)]
+        public string RedisAddress { get; set; }
+
+        /// <summary>Redis数据库</summary>
+        [ProtoMember(5)]
+        public int RedisDB { get; set; }
+    }
+
+    [ProtoContract]
     [Config]
     public partial class StartZoneConfigCategory: ConfigSingleton<StartZoneConfigCategory>, IMerge
     {
         [BsonElement]
         [ProtoMember(1)]
         private List<StartZoneConfig> list = new List<StartZoneConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        public List<StartZoneConfig> List => this.list;
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -41,34 +69,5 @@ namespace ET
 
             this.AfterEndInit();
         }
-
-        public List<StartZoneConfig> GetAll()
-        {
-            return this.list;
-        }
-    }
-
-    [ProtoContract]
-    public partial class StartZoneConfig: ProtoObject, IConfig
-    {
-        /// <summary>ID</summary>
-        [ProtoMember(1)]
-        public int ID { get; set; }
-
-        /// <summary>数据库地址</summary>
-        [ProtoMember(2)]
-        public string DBAddress { get; set; }
-
-        /// <summary>数据库名</summary>
-        [ProtoMember(3)]
-        public string DBName { get; set; }
-
-        /// <summary>Redis地址</summary>
-        [ProtoMember(4)]
-        public string RedisAddress { get; set; }
-
-        /// <summary>Redis数据库</summary>
-        [ProtoMember(5)]
-        public int RedisDB { get; set; }
     }
 }

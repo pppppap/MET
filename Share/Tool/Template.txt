@@ -7,12 +7,22 @@ using ProtoBuf;
 namespace ET
 {
     [ProtoContract]
+    public partial class (ConfigName): ProtoObject, IConfig
+    {
+(Fields)
+    }
+
+    [ProtoContract]
     [Config]
     public partial class (ConfigName)Category: ConfigSingleton<(ConfigName)Category>, IMerge
     {
         [BsonElement]
         [ProtoMember(1)]
         private List<(ConfigName)> list = new List<(ConfigName)>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        public List<(ConfigName)> List => this.list;
 
 (DictOp)
 
@@ -29,16 +39,5 @@ namespace ET
 
             this.AfterEndInit();
         }
-
-        public List<(ConfigName)> GetAll()
-        {
-            return this.list;
-        }
-    }
-
-    [ProtoContract]
-    public partial class (ConfigName): ProtoObject, IConfig
-    {
-(Fields)
     }
 }

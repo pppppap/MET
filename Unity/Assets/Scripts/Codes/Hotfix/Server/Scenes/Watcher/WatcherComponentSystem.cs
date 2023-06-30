@@ -25,7 +25,7 @@ namespace ET.Server
         public static void Start(this WatcherComponent self, int createScenes = 0)
         {
             string[] localIP = NetworkHelper.GetAddressIPs();
-            var processConfigs = StartProcessConfigCategory.Instance.GetAll();
+            var processConfigs = StartProcessConfigCategory.Instance.List;
             foreach (StartProcessConfig startProcessConfig in processConfigs)
             {
                 if (!WatcherHelper.IsThisMachine(startProcessConfig.InnerIP, localIP))

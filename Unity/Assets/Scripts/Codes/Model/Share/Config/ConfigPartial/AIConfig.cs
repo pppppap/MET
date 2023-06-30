@@ -19,7 +19,7 @@ namespace ET
 
 		public override void AfterEndInit()
 		{
-			foreach (var cfg in this.GetAll())
+			foreach (var cfg in this.List)
 			{
 				SortedDictionary<int, AIConfig> aiNodeConfig;
 				if (!this.AIConfigs.TryGetValue(cfg.AIConfigId, out aiNodeConfig))

@@ -7,12 +7,24 @@ using ProtoBuf;
 namespace ET
 {
     [ProtoContract]
+    public partial class ExampleConfig: ProtoObject, IConfig
+    {
+        /// <summary>唯一id</summary>
+        [ProtoMember(1)]
+        public int ID { get; set; }
+    }
+
+    [ProtoContract]
     [Config]
     public partial class ExampleConfigCategory: ConfigSingleton<ExampleConfigCategory>, IMerge
     {
         [BsonElement]
         [ProtoMember(1)]
         private List<ExampleConfig> list = new List<ExampleConfig>();
+
+        [ProtoIgnore]
+        [BsonIgnore]
+        public List<ExampleConfig> List => this.list;
 
         [ProtoIgnore]
         [BsonIgnore]
@@ -41,18 +53,5 @@ namespace ET
 
             this.AfterEndInit();
         }
-
-        public List<ExampleConfig> GetAll()
-        {
-            return this.list;
-        }
-    }
-
-    [ProtoContract]
-    public partial class ExampleConfig: ProtoObject, IConfig
-    {
-        /// <summary>唯一id</summary>
-        [ProtoMember(1)]
-        public int ID { get; set; }
     }
 }
