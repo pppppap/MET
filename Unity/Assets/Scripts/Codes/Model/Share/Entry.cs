@@ -44,6 +44,7 @@
             }
             else
             {
+                // 其他模式下配置懒加载
                 Game.AddSingleton<ConfigComponent>();
             }
 

@@ -2,7 +2,7 @@
 
 namespace ET.Server
 {
-    [FriendOf(typeof(DBManagerComponent))]
+    [FriendOf(typeof (DBManagerComponent))]
     public static class DBManagerComponentSystem
     {
         [ObjectSystem]
@@ -22,7 +22,7 @@ namespace ET.Server
                 DBManagerComponent.Instance = null;
             }
         }
-        
+
         public static DBComponent GetZoneDB(this DBManagerComponent self, int zone)
         {
             DBComponent dbComponent = self.DBComponents[zone];
@@ -31,13 +31,14 @@ namespace ET.Server
                 return dbComponent;
             }
 
-            StartZoneConfig startZoneConfig = StartZoneConfigCategory.Instance.Get(zone);
-            if (startZoneConfig.DBAddress == "")
+            ZoneConfig zoneConfig = ZoneConfigCategory.Instance.Get(zone);
+
+            if (zoneConfig.MongoHost == "" || zoneConfig.MongoPort == 0)
             {
                 throw new Exception($"zone: {zone} not found mongo connect string");
             }
 
-            dbComponent = self.AddChild<DBComponent, string, string, int>(startZoneConfig.DBAddress, startZoneConfig.DBName, zone);
+            dbComponent = self.AddChild<DBComponent, ZoneConfig>(zoneConfig);
             self.DBComponents[zone] = dbComponent;
             return dbComponent;
         }

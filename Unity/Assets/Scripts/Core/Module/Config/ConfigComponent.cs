@@ -50,9 +50,14 @@ namespace ET
 
         public void Load()
         {
-            this.allConfig.Clear();
-            Dictionary<Type, byte[]> configBytes = EventSystem.Instance.Invoke<GetAllConfigBytes, Dictionary<Type, byte[]>>(new GetAllConfigBytes());
+            foreach ((Type _, ISingleton value) in this.allConfig)
+            {
+                value.Destroy();
+            }
 
+            this.allConfig.Clear();
+
+            Dictionary<Type, byte[]> configBytes = EventSystem.Instance.Invoke<GetAllConfigBytes, Dictionary<Type, byte[]>>(new GetAllConfigBytes());
             foreach (Type type in configBytes.Keys)
             {
                 byte[] oneConfigBytes = configBytes[type];
@@ -62,7 +67,13 @@ namespace ET
 
         public async ETTask LoadAsync()
         {
+            foreach ((Type _, ISingleton value) in this.allConfig)
+            {
+                value.Destroy();
+            }
+
             this.allConfig.Clear();
+
             Dictionary<Type, byte[]> configBytes = EventSystem.Instance.Invoke<GetAllConfigBytes, Dictionary<Type, byte[]>>(new GetAllConfigBytes());
 
             using ListComponent<Task> listTasks = ListComponent<Task>.Create();
@@ -79,6 +90,11 @@ namespace ET
 
         private void LoadOneInThread(Type configType, byte[] oneConfigBytes)
         {
+            if (this.allConfig.ContainsKey(configType))
+            {
+                return;
+            }
+
             object category = SerializeHelper.Deserialize(configType, oneConfigBytes, 0, oneConfigBytes.Length);
 
             lock (this)

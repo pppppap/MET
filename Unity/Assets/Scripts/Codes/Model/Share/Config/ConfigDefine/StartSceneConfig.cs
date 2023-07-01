@@ -19,7 +19,7 @@ namespace ET
         [ProtoMember(2)]
         public int Process { get; set; }
 
-        /// <summary>所属区</summary>
+        /// <summary>区</summary>
         [ProtoMember(3)]
         public int Zone { get; set; }
 

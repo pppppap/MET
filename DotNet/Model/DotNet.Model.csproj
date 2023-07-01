@@ -36,11 +36,19 @@
         <Compile Include="..\..\Unity\Assets\Scripts\Codes\Model\Share\**\*.cs">
             <Link>Share\%(RecursiveDir)%(FileName)%(Extension)</Link>
         </Compile>
+        
+        <Compile Remove="Share\**" />
     </ItemGroup> 
     <ItemGroup> 
         <ProjectReference Include="..\..\Share\Analyzer\Share.Analyzer.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
         <ProjectReference Include="..\Core\DotNet.Core.csproj" />
         <ProjectReference Include="..\Loader\DotNet.Loader.csproj" />
         <ProjectReference Include="..\ThirdParty\DotNet.ThirdParty.csproj" />
+    </ItemGroup> 
+    <ItemGroup>
+      <EmbeddedResource Remove="Share\**" />
+    </ItemGroup> 
+    <ItemGroup>
+      <None Remove="Share\**" />
     </ItemGroup>
 </Project>

@@ -46,8 +46,8 @@ namespace ET
         private static string template_kv;
 
         private const string ClassDir = "../Unity/Assets/Scripts/Codes/Model/Share/Config/ConfigDefine";
-
         private const string excelDir = "../Unity/Assets/Config/Excel/";
+        private const string assetBundleProtoDir = "../Unity/Assets/Bundles/Config";
 
         private static Assembly configAssembly;
 
@@ -118,6 +118,15 @@ namespace ET
                 // 动态编译生成的配置代码
                 configAssembly = DynamicBuild();
 
+                if (Directory.Exists("../Config/Excel"))
+                {
+                    Directory.Delete("../Config/Excel", true);
+                }
+                if (Directory.Exists("../Config/Json"))
+                {
+                    Directory.Delete("../Config/Json", true);
+                }
+
                 foreach (var kv in tables)
                 {
                     Table table = kv.Value;
@@ -127,6 +136,13 @@ namespace ET
                         ExportExcelProtobuf(table.TableName, tableData);
                     }
                 }
+
+                if (Directory.Exists(assetBundleProtoDir))
+                {
+                    Directory.Delete(assetBundleProtoDir, true);
+                }
+                FileHelper.CopyDirectory("../Config/Excel", assetBundleProtoDir);
+                Directory.Delete(assetBundleProtoDir+"/StartConfig", true);
 
                 Log.Console("Export Excel Sucess!");
             }

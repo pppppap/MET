@@ -29,16 +29,11 @@ namespace ET.Server
                     scene.AddComponent<NetServerComponent, IPEndPoint>(startSceneConfig.InnerIPOutPort);
                     break;
                 case SceneType.Gate:
-                    scene.AddComponent<RedisComponent, int>(startSceneConfig.Zone);
                     scene.AddComponent<NetServerComponent, IPEndPoint>(startSceneConfig.InnerIPOutPort);
                     scene.AddComponent<PlayerComponent>();
                     scene.AddComponent<GateSessionKeyComponent>();
                     break;
                 case SceneType.Map:
-                    if (startSceneConfig != null)
-                    {
-                        scene.AddComponent<RedisComponent, int>(startSceneConfig.Zone);
-                    }
                     scene.AddComponent<UnitComponent>();
                     scene.AddComponent<AOIManagerComponent>();
                     break;

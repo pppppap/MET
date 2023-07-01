@@ -174,6 +174,22 @@ message R2C_Login // IResponse
 	int64 GateId = 6;
 }
 
+//ResponseType R2C_Register
+message C2R_Register // IRequest
+{
+	int32 RpcId = 1;
+	string Account = 2;  // 帐号
+	string Password = 3;  // 密码
+}
+
+message R2C_Register // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+	string Account = 4;  // 帐号
+}
+
 //ResponseType G2C_LoginGate
 message C2G_LoginGate // IRequest
 {
